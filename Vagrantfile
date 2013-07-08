@@ -5,7 +5,7 @@ Vagrant::Config.run do |config|
   #config.vm.network :hostonly, "33.33.33.10"
   config.vm.forward_port 80, 3000
 
-  config.vm.share_folder("v-root", "/wordpress_project", ".")
+  config.vm.share_folder "v-root", "/wordpress_project", ".", :owner => "www-data", :group => "www-data"
 
   config.vm.customize ["modifyvm", :id, "--memory", "1024", "--hwvirtexexcl", "on"]
 

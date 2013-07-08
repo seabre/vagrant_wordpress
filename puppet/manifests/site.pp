@@ -79,3 +79,11 @@ mysql::db { 'dda':
   host     => 'localhost',
   grant    => ['all'],
 }
+
+# Ensure uploads folder is created.
+file { "/wordpress_project/wp-content/uploads":
+  owner => "www-data",
+  group => "www-data",
+  mode => "755",
+  ensure => "directory"
+}
