@@ -1,78 +1,55 @@
-class {'mysql':  }
-class {'apache':  }
+Exec { path => '/usr/bin:/usr/sbin/:/bin:/sbin:/usr/local/bin:/usr/local/sbin' }
 
-# Setup apache
-apache::vhost { 'wordpress_project':
-    priority        => '10',
-    vhost_name      => '*',
-    port            => '80',
-    docroot         => '/wordpress_project/',
+# Run updates.
+stage { 'preinstall':
+  before => Stage['main']
 }
 
-# Update Apt Repo
-exec {"update-apt":
-  command => "apt-get update",
-  cwd     => "/",
-  path    => ["/usr/bin", "/usr/local/bin", "/bin", "/usr/local/sbin", "/usr/sbin", "/sbin"],
+class apt_get_update {
+  exec { 'apt-get -y update':}
+}
+class { 'apt_get_update':
+  stage => preinstall
 }
 
-# Install cURL
-package {"curl":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install bash-completion
-package {"bash-completion":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install openssh-server
-package {"openssh-server":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install openssh-client
-package {"openssh-client":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install openssh-blacklist
-package {"openssh-blacklist":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install openssh-blacklist-extra
-package {"openssh-blacklist-extra":
-  ensure => present,
-  require => Exec["update-apt"],
-}
+class {'mysql': }
 
 # Install mysql-server
 class { 'mysql::server':
   config_hash => { 'root_password' => 'password' }
 }
 
+#class { 'apache':
+#  default_vhost => false,
+#}
+
+# Setup apache
+apache::vhost { 'wordpress':
+    vhost_name => '*',
+    priority        => '10',
+    port            => '80',
+    docroot         => '/wordpress_project/',
+    configure_firewall => false
+}
+
+# Install cURL
+package {"curl":
+  ensure => present,
+}
+
 # Install php5
 package {"php5":
   ensure => present,
-  require => Exec["update-apt"],
 }
 
 # Install php5-gd
 package {"php5-gd":
   ensure => present,
-  require => Exec["update-apt"],
 }
 
 # Install php5-dev
 package {"php5-dev":
   ensure => present,
-  require => Exec["update-apt"],
 }
 
 # Make sure mod_php is installed
@@ -81,52 +58,14 @@ class {'apache::mod::php': }
 # Install php5-mysql
 class { 'mysql::php': }
 
-# Install sysstat
-package {"sysstat":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install subversion
-package {"subversion":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install git
-package {"git":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
 # Install phpmyadmin
 package {"phpmyadmin":
   ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install rkhunter
-package {"rkhunter":
-  ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install logwatch
-package {"logwatch":
-  ensure => present,
-  require => Exec["update-apt"],
 }
 
 # Install php5-curl
 package {"php5-curl":
   ensure => present,
-  require => Exec["update-apt"],
-}
-
-# Install tree
-package {"tree":
-  ensure => present,
-  require => Exec["update-apt"],
 }
 
 # Create DB for project.

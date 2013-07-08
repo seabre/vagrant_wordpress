@@ -10,6 +10,7 @@ Vagrant::Config.run do |config|
   config.vm.customize ["modifyvm", :id, "--memory", "1024", "--hwvirtexexcl", "on"]
 
   config.vm.provision :puppet do |puppet|
+    puppet.facter = { "fqdn" => "local.wordpress_project", "hostname" => "www" }
     puppet.manifests_path = 'puppet/manifests'
     puppet.manifest_file = 'site.pp'
     puppet.module_path = 'puppet/modules'
