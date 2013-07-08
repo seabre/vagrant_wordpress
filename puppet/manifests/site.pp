@@ -29,7 +29,8 @@ apache::vhost { 'wordpress':
     priority        => '10',
     port            => '80',
     docroot         => '/wordpress_project/',
-    configure_firewall => false
+    configure_firewall => false,
+    override => 'All'
 }
 
 # Install cURL
@@ -54,6 +55,9 @@ package {"php5-dev":
 
 # Make sure mod_php is installed
 class {'apache::mod::php': }
+
+# Make sure mod_rewrite is installed
+apache::mod { 'rewrite': }
 
 # Install php5-mysql
 class { 'mysql::php': }
