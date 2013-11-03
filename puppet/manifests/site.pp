@@ -1,6 +1,9 @@
-Exec { path => '/usr/bin:/usr/sbin/:/bin:/sbin:/usr/local/bin:/usr/local/sbin' }
+# Set path
+Exec { 
+  path => '/usr/bin:/usr/sbin/:/bin:/sbin:/usr/local/bin:/usr/local/sbin'
+}
 
-# Run updates.
+# Run updates
 stage { 'preinstall':
   before => Stage['main']
 }
@@ -12,78 +15,80 @@ class { 'apt_get_update':
   stage => preinstall
 }
 
-class {'mysql': }
-
-# Install mysql-server
-class { 'mysql::server':
-  config_hash => { 'root_password' => 'password' }
+# Setup Apache
+class { 'apache': 
+  mpm_module => 'prefork'
 }
 
-#class { 'apache':
-#  default_vhost => false,
-#}
-
-# Setup apache
-apache::vhost { 'wordpress':
-    vhost_name => '*',
-    priority        => '10',
-    port            => '80',
-    docroot         => '/wordpress_project/',
-    configure_firewall => false,
-    override => 'All'
+apache::vhost { $project_name:
+    vhost_name  => '*',
+    priority    => '10',
+    port        => '80',
+    docroot     => '/wordpress_project/'
 }
+
+# Install mod_rewrite
+apache::mod { 'rewrite': }
+
+# Install mod_php
+class { 'apache::mod::php': }
 
 # Install cURL
-package {"curl":
-  ensure => present,
+package { "curl":
+  ensure => present
 }
 
 # Install php5
-package {"php5":
-  ensure => present,
+package { "php5":
+  ensure => present
 }
 
 # Install php5-gd
-package {"php5-gd":
-  ensure => present,
+package { "php5-gd":
+  ensure => present
 }
 
 # Install php5-dev
-package {"php5-dev":
-  ensure => present,
-}
-
-# Make sure mod_php is installed
-class {'apache::mod::php': }
-
-# Make sure mod_rewrite is installed
-apache::mod { 'rewrite': }
-
-# Install php5-mysql
-class { 'mysql::php': }
-
-# Install phpmyadmin
-package {"phpmyadmin":
-  ensure => present,
+package { "php5-dev":
+  ensure => present
 }
 
 # Install php5-curl
-package {"php5-curl":
-  ensure => present,
+package { "php5-curl":
+  ensure => present
 }
 
-# Create DB for project.
-mysql::db { 'dda':
-  user     => 'dda',
+# Install phpmyadmin
+package { "phpmyadmin":
+  ensure => present
+}
+
+# Install php5-mysql
+package { "php5-mysql":
+  ensure => present
+}
+
+# Setup MySQL
+class { 'mysql::server':
+  root_password => 'password' }
+
+# Create database for project
+mysql::db { $project_name:
+  user     => $project_name,
   password => 'password',
   host     => 'localhost',
-  grant    => ['all'],
+  grant    => ['all']
 }
 
-# Ensure uploads folder is created.
-file { "/wordpress_project/wp-content/uploads":
-  owner => "www-data",
-  group => "www-data",
-  mode => "755",
-  ensure => "directory"
+# Install WordPress
+class { 'wordpress':
+  wp_owner        => 'www-data',
+  wp_group        => 'www-data',
+  install_dir     => '/wordpress_project/',
+  version         => 'latest',
+  create_db       => false,
+  create_db_user  => false,
+  db_name         => $project_name,
+  db_user         => $project_name,
+  db_password     => 'password'
 }
