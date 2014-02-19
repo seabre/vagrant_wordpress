@@ -10,8 +10,20 @@ class wordpress::app (
   $wp_group,
   $wp_lang,
   $wp_plugin_dir,
+  $wp_additional_config,
+  $wp_table_prefix,
+  $wp_proxy_host,
+  $wp_proxy_port,
+  $wp_multisite,
+  $wp_site_domain,
 ) {
-  validate_string($install_dir,$install_url,$version,$db_name,$db_host,$db_user,$db_password,$wp_owner,$wp_group, $wp_lang, $wp_plugin_dir)
+  validate_string($install_dir,$install_url,$version,$db_name,$db_host,$db_user,$db_password,$wp_owner,$wp_group, $wp_lang, $wp_plugin_dir,$wp_additional_config,$wp_table_prefix,$wp_proxy_host,$wp_proxy_port,$wp_site_domain)
+  validate_bool($wp_multisite)
+  validate_absolute_path($install_dir)
+
+  if $wp_multisite and ! $wp_site_domain {
+    fail('wordpress class requires `wp_site_domain` parameter when `wp_multisite` is true')
+  }
 
   ## Resource defaults
   File {
@@ -47,6 +59,10 @@ class wordpress::app (
     command => "tar zxvf ./wordpress-${version}.tar.gz --strip-components=1",
     creates => "${install_dir}/index.php",
   }
+  ~> exec { 'Change ownership':
+    command     => "chown -R ${wp_owner}:${wp_group} ${install_dir}",
+    refreshonly => true,
+  }
 
   ## Configure wordpress
   #
@@ -69,7 +85,7 @@ class wordpress::app (
     order   => '10',
     require => File["${install_dir}/wp-keysalts.php"],
   }
-  # Template uses: $db_name, $db_user, $db_password, $db_host
+  # Template uses: $db_name, $db_user, $db_password, $db_host, $wp_proxy, $wp_proxy_host, $wp_proxy_port, $wp_multisite, $wp_site_domain
   concat::fragment { 'wp-config.php body':
     target  => "${install_dir}/wp-config.php",
     content => template('wordpress/wp-config.php.erb'),

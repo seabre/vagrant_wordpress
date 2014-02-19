@@ -1,42 +1,49 @@
 {
   "name": "hunner-wordpress",
-  "version": "0.4.2",
-  "source": "https://github.com/hunner/puppet-wordpress",
-  "author": "Hunter Haugen",
-  "license": "Apache2",
+  "version": "0.6.0",
   "summary": "Puppet module to set up an instance of wordpress",
+  "author": "Hunter Haugen",
   "description": "Installs wordpress and required mysql db/user.",
-  "project_page": "https://github.com/hunner/puppet-wordpress",
   "dependencies": [
     {
-      "name": "ripienaar/concat",
-      "version_requirement": ">= 0.2.0"
+      "name": "puppetlabs/concat",
+      "version_requirement": "\u003e\u003d 1.0.0"
     },
     {
       "name": "puppetlabs/mysql",
-      "version_requirement": ">= 0.5.0"
+      "version_requirement": "\u003e\u003d 2.1.0"
     },
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": ">= 2.3.1"
+      "version_requirement": "\u003e\u003d 2.3.1"
     }
   ],
-  "types": [
-
-  ],
+  "types": [],
   "checksums": {
-    "CHANGELOG": "ecf92a3463dc54c384ae7033250cf679",
-    "Modulefile": "0796ddd84da11cc531517445938996e8",
-    "README.markdown": "c19eac79f7b92bcfe4a753490bcb0fa9",
-    "Rakefile": "0254db5d3fc38c67a2c160d7296a24f8",
-    "manifests/app.pp": "cc59f173abcea74040cb29982a8fde09",
-    "manifests/db.pp": "8f55d0c7a34d04844e65ace12d0b582f",
-    "manifests/init.pp": "e80b9bb65e0e2372792e03e9d73fe413",
-    "spec/classes/wordpress_spec.rb": "fc92626d8f5e4ed550f1647075858baf",
+    ".bundle/config": "b898efea5e8783d6593fcdabec67e925",
+    ".bundle/install.log": "5a2a044cb8ed775b89ca33c3518bd2ad",
+    ".fixtures.yml": "566188a567697053cdbe42dec9f6b2a3",
+    ".nodeset.yml": "f2b857f9fc7a701ff118e28591c12925",
+    ".travis.yml": "5996ebdcaafae6fe4286fc3290feb4e3",
+    "CHANGELOG": "d72d44cc62976b67ea0faca6ca0c761f",
+    "Gemfile": "df7284539ba0de9657b83c4f7fe8bed8",
+    "Gemfile.lock": "7a2b97ae456aea922aeee268b7c1811d",
+    "Modulefile": "43211bd93fcfb57bceacaeadd0efeac6",
+    "README.markdown": "60ea97d169ef003ceb2ec1776e29308b",
+    "Rakefile": "0428ea3759a4692c91604396c406a9c1",
+    "manifests/app.pp": "0f37ebbd4bc40986c6a298aee93c3ffb",
+    "manifests/db.pp": "adf86056f5b8ce3f1eac756dd049cbeb",
+    "manifests/init.pp": "5ec1875af5ef836db5d5b9fee3a6b8da",
+    "spec/classes/wordpress_spec.rb": "bfb783231bd99229a9633bf02b177dc2",
     "spec/spec.opts": "c407193b3d9028941ef59edd114f5968",
     "spec/spec_helper.rb": "0db89c9a486df193c0e40095422e19dc",
-    "templates/wp-config.php.erb": "0638e30267f5561957da1b35aa17d307",
+    "spec/spec_helper_system.rb": "29bccd4e53c802ceb52b4fd831b6b0c9",
+    "spec/system/wordpress_spec.rb": "e105c03b050bdd8b1ae49ba2bfc62d6b",
+    "templates/wp-config.php.erb": "60efef8f45562faf8f3c2bfc524b56dd",
     "templates/wp-keysalts.php.erb": "e48447c1a47e8b66bc823ff1d49e0da7",
     "tests/init.pp": "4086340a435b8b5b3fbbdb2b119c42e4"
-  }
+  },
+  "source": "https://github.com/hunner/puppet-wordpress",
+  "project_page": "https://github.com/hunner/puppet-wordpress",
+  "license": "Apache2"
 }

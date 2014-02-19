@@ -1,0 +1,18 @@
+HOSTS:
+  ubuntu-1004-master:
+    roles:
+      - master
+      - agent
+      - dashboard
+    platform: ubuntu-10.04-amd64
+    hypervisor: vagrant
+    box: ubuntu-server-10044-x64-vbox4210-nocm
+  ubuntu-1004-agent:
+    roles:
+      - agent
+    platform: ubuntu-10.04-amd64
+    hypervisor: vagrant
+    box: ubuntu-server-10044-x64-vbox4210-nocm
+CONFIG:
+  consoleport: 443
+

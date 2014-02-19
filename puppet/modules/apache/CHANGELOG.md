@@ -1,3 +1,79 @@
+## 2014-01-31 Release 0.11.0
+### Summary:
+
+This release adds preliminary support for Windows compatibility and multiple rewrite support.
+
+### Backwards-incompatible Changes:
+
+- The rewrite_rule parameter is deprecated in favor of the new rewrite parameter
+  and will be removed in a future release.
+
+### Features:
+
+- add Match directive
+- quote paths for windows compatibility
+- add auth_group_file option to README.md
+- allow AuthGroupFile directive for vhosts
+- Support Header directives in vhost context
+- Don't purge mods-available dir when separate enable dir is used
+- Fix the servername used in log file name
+- Added support for mod_include
+- Remove index parameters.
+- Support environment variable control for CustomLog
+- added redirectmatch support
+- Setting up the ability to do multiple rewrites and conditions.
+- Convert spec tests to beaker.
+- Support php_admin_(flag|value)s
+
+### Bugfixes:
+
+- directories are either a Hash or an Array of Hashes
+- Configure Passenger in separate .conf file on RH so PassengerRoot isn't lost
+- (docs) Update list of `apache::mod::[name]` classes
+- (docs) Fix apache::namevirtualhost example call style
+- Fix $ports_file reference in apache::listen.
+- Fix $ports_file reference in Namevirtualhost.
+
+
+## 2013-12-05 Release 0.10.0
+### Summary:
+
+This release adds FreeBSD osfamily support and various other improvements to some mods.
+
+### Features:
+
+- Add suPHP_UserGroup directive to directory context
+- Add support for ScriptAliasMatch directives
+- Set SSLOptions StdEnvVars in server context
+- No implicit <Directory> entry for ScriptAlias path
+- Add support for overriding ErrorDocument
+- Add support for AliasMatch directives
+- Disable default "allow from all" in vhost-directories
+- Add WSGIPythonPath as an optional parameter to mod_wsgi. 
+- Add mod_rpaf support
+- Add directives: IndexOptions, IndexOrderDefault
+- Add ability to include additional external configurations in vhost
+- need to use the provider variable not the provider key value from the directory hash for matches
+- Support for FreeBSD and few other features
+- Add new params to apache::mod::mime class
+- Allow apache::mod to specify module id and path
+- added $server_root parameter
+- Add Allow and ExtendedStatus support to mod_status
+- Expand vhost/_directories.pp directive support
+- Add initial support for nss module (no directives in vhost template yet)
+- added peruser and event mpms
+- added $service_name parameter
+- add parameter for TraceEnable
+- Make LogLevel configurable for server and vhost
+- Add documentation about $ip
+- Add ability to pass ip (instead of wildcard) in default vhost files
+
+### Bugfixes:
+
+- Don't listen on port or set NameVirtualHost for non-existent vhost
+- only apply Directory defaults when provider is a directory
+- Working mod_authnz_ldap support on Debian/Ubuntu
+
 ## 2013-09-06 Release 0.9.0
 ### Summary:
 This release adds more parameters to the base apache class and apache defined

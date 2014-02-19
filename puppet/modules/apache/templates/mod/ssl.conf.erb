@@ -8,7 +8,7 @@
   AddType application/x-pkcs7-crl    .crl
 
   SSLPassPhraseDialog  builtin
-  SSLSessionCache shmcb:<%= @session_cache %>
+  SSLSessionCache "shmcb:<%= @session_cache %>"
   SSLSessionCacheTimeout 300
 <% if @ssl_compression -%>
   SSLCompression Off
@@ -18,4 +18,7 @@
   SSLHonorCipherOrder On
   SSLCipherSuite HIGH:MEDIUM:!aNULL:!MD5
   SSLProtocol all -SSLv2
+<% if @ssl_options -%>
+  SSLOptions <%= @ssl_options.compact.join(' ') %>
+<% end -%>
 </IfModule>

@@ -1,0 +1,17 @@
+HOSTS:
+  ubuntu-1004-master:
+    roles:
+      - master
+      - agent
+    platform: ubuntu-10.04-amd64
+    hypervisor: vagrant
+    box: ubuntu-server-10044-x64-vbox4210
+    box_url: http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-10044-x64-vbox4210.box
+  ubuntu-1004-agent:
+    roles:
+      - agent
+    platform: ubuntu-10.04-amd64
+    hypervisor: vagrant
+    box: ubuntu-server-10044-x64-vbox4210
+    box_url: http://puppet-vagrant-boxes.puppetlabs.com/ubuntu-server-10044-x64-vbox4210.box
+

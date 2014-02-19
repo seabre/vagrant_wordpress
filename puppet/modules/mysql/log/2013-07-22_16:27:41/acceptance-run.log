@@ -1,0 +1,38 @@
+[01;37m[00;00m[01;37mBegin spec/acceptance/base.rb
+[00;00m[01;37m
+The challenging 'Hello, World' manifest
+[00;00m[01;37m
+  * ensure we are clean before testing...
+[00;00m[01;37m
+  * run the manifest itself
+[00;00m[01;31m#<RuntimeError: Host 'ubuntu-1004-master' exited with 127 running:
+ env PATH="/usr/bin:/opt/puppet-git-repos/hiera/bin:${PATH}" RUBYLIB="/opt/puppet-git-repos/hiera/lib:/opt/puppet-git-repos/hiera-puppet/lib:${RUBYLIB}" puppet apply  --verbose
+Last 10 lines of output were:
+	env: puppet: No such file or directory>
+[00;00m[01;31m/Users/hunner/Documents/work/git/puppetlabs-mysql/spec/acceptance/base.rb:13
+[00;00m[01;31m/Users/hunner/Documents/work/git/puppetlabs-mysql/spec/acceptance/base.rb:4
+[00;00m[01;31m/Users/hunner/Documents/work/git/puppetlabs-mysql/spec/acceptance/base.rb:4
+[00;00m[01;37mPlatform for ubuntu-1004-master ubuntu-10.04-amd64
+[00;00m[01;37mPlatform for ubuntu-1004-agent ubuntu-10.04-amd64
+[00;00m[01;37mRole for ubuntu-1004-master master
+[00;00m[01;37mRole for ubuntu-1004-master agent
+[00;00m[01;37mRole for ubuntu-1004-agent agent
+[00;00m[01;37mRuby version for ubuntu-1004-master 
+[00;00m[01;37mRuby version for ubuntu-1004-agent 
+[00;00m[01;37mConfig Key|Val: consoleport 443
+[00;00m[01;37mConfig Key|Val: ssh {:config=>false, :paranoid=>false, :timeout=>300, :auth_methods=>["publickey"], :keys=>["/Users/hunner/.ssh/id_rsa"], :port=>22, :user_known_hosts_file=>"/Users/hunner/.ssh/known_hosts", :forward_agent=>true}
+[00;00m[01;37mConfig Key|Val: modules ["puppetlabs/mysql"]
+[00;00m[01;37mConfig Key|Val: puppet_ver nil
+[00;00m[01;37mConfig Key|Val: facter_ver nil
+[00;00m[01;37mConfig Key|Val: hiera_ver nil
+[00;00m[01;37mConfig Key|Val: hiera_puppet_ver nil
+[00;00m[01;37m  Test Case spec/acceptance/base.rb reported: #<RuntimeError: Host 'ubuntu-1004-master' exited with 127 running:
+ env PATH="/usr/bin:/opt/puppet-git-repos/hiera/bin:${PATH}" RUBYLIB="/opt/puppet-git-repos/hiera/lib:/opt/puppet-git-repos/hiera-puppet/lib:${RUBYLIB}" puppet apply  --verbose
+Last 10 lines of output were:
+	env: puppet: No such file or directory>
+[00;00m[01;31mFailed: errored in TestSuite: report_and_raise_on_failure
+[00;00m[01;31m#<RuntimeError: Failed while running the acceptance suite>
+[00;00m[01;37mNo tests to run for suite 'post-suite'
+[00;00m[01;37mCleanup: cleaning up after failed run
+[00;00m[01;37mDestroying vagrant boxes
+[00;00m

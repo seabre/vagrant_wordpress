@@ -1,3 +1,66 @@
+2014-02-13 - Version 2.2.0
+
+Summary:
+
+Features:
+- Add `backupdirmode`, `backupdirowner`, `backupdirgroup` to
+  mysql::server::backup to allow customizing the mysqlbackupdir.
+- Support multiple options of the same name, allowing you to
+  do 'replicate-do-db' => ['base1', 'base2', 'base3'] in order to get three
+  lines of replicate-do-db = base1, replicate-do-db = base2 etc.
+- 
+
+Bugfixes:
+- Fix `restart` so it actually stops mysql restarting if set to false.
+- DRY out the defaults_file functionality in the providers.
+- mysql_grant fixed to work with root@localhost/@.
+- mysql_grant fixed for WITH MAX_QUERIES_PER_HOUR
+- mysql_grant fixed so revoking all privileges accounts for GRANT OPTION
+- mysql_grant fixed to remove duplicate privileges.
+- mysql_grant fixed to handle PROCEDURES when removing privileges.
+- mysql_database won't try to create existing databases, breaking replication.
+- bind_address renamed bind-address in 'mysqld' options.
+- key_buffer renamed to key_buffer_size.
+- log_error renamed to log-error.
+- pid_file renamed to pid-file.
+- Ensure mysql::server:root_password runs before mysql::server::backup
+- Fix options_override -> override_options in the README.
+- Extensively rewrite the README to be accurate and awesome.
+
+- Move to requiring stdlib 3.2.0, shipped in PE3.0
+- Add many new tests.
+
+
+2013-11-13 - Version 2.1.0
+
+Summary:
+
+The most important changes in 2.1.0 are improvements to the my.cnf creation,
+as well as providers.  Setting options to = true strips them to be just the
+key name itself, which is required for some options.
+
+The provider updates fix a number of bugs, from lowercase privileges to
+deprecation warnings.
+
+Last, the new hiera integration functionality should make it easier to
+externalize all your grants, users, and, databases.  Another great set of
+community submissions helped to make this release.
+
+Features:
+- Some options can not take a argument. Gets rid of the '= true' when an
+option is set to true.
+- Easier hiera integration:  Add hash parameters to mysql::server to allow
+specifying grants, users, and databases.
+
+Fixes:
+- Fix an issue with lowercase privileges in mysql_grant{} causing them to be reapplied needlessly.
+- Changed defaults-file to defaults-extra-file in providers.
+- Ensure /root/.my.cnf is 0600 and root owned.
+- database_user deprecation warning was incorrect.
+- Add anchor pattern for client.pp
+- Documentation improvements.
+- Various test fixes.
+
 2013-10-21 - Version 2.0.1
 
 Summary:
@@ -7,7 +70,7 @@ privileges could cause Puppet to incorrectly reapply the permissions on
 each run.
 
 Fixes:
-- Mysql_grant now sorts privileges in the type and provider for comparision.
+- Mysql_grant now sorts privileges in the type and provider for comparison.
 - Comment and test tweak for PE3.1.
 
 2013-10-14 - Version 2.0.0
@@ -24,7 +87,7 @@ Please remain on 1.0.0 if you don't have time to fully test this in dev.
 
 * mysql::server, mysql::client, and mysql::bindings are the primary interface
 classes.
-* mysql::server takes an `options_override` parameter to set my.cnf options,
+* mysql::server takes an `override_options` parameter to set my.cnf options,
 with the hash format: { 'section' => { 'thing' => 'value' }}
 * mysql attempts backwards compatibility by forwarding all parameters to
 mysql::server.
@@ -83,7 +146,7 @@ Please remain on 1.0.0 if you don't have time to fully test this in dev.
 
 * mysql::server, mysql::client, and mysql::bindings are the primary interface
 classes.
-* mysql::server takes an `options_override` parameter to set my.cnf options,
+* mysql::server takes an `override_options` parameter to set my.cnf options,
 with the hash format: { 'section' => { 'thing' => 'value' }}
 * mysql attempts backwards compatibility by forwarding all parameters to
 mysql::server.

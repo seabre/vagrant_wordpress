@@ -1,173 +1,171 @@
 {
   "name": "puppetlabs-mysql",
-  "version": "2.0.1",
+  "version": "2.2.0",
   "summary": "Mysql module",
+  "source": "git://github.com/puppetlabs/puppetlabs-mysql.git",
+  "project_page": "http://github.com/puppetlabs/puppetlabs-mysql",
   "author": "Puppet Labs",
-  "description": "Mysql module",
+  "license": "Apache 2.0",
+  "operatingsystem_support": [
+    "RedHat",
+    "OpenSUSE",
+    "SLES",
+    "SLED",
+    "Debian",
+    "Ubuntu"
+  ],
+  "puppet_version": [
+    "2.7",
+    "3.0",
+    "3.1",
+    "3.2",
+    "3.3"
+  ],
   "dependencies": [
     {
       "name": "puppetlabs/stdlib",
-      "version_requirement": "\u003e\u003d 2.2.1"
+      "version_requirement": ">= 3.2.0"
     }
   ],
+  "description": "Mysql module",
   "types": [
     {
+      "name": "database",
+      "doc": "Manage databases.",
+      "properties": [
+        {
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.\n\nValid values are `present`, `absent`. "
+        },
+        {
+          "name": "charset",
+          "doc": "The characterset to use for a database\n\nValues can match `/^\\S+$/`."
+        }
+      ],
+      "parameters": [
+        {
+          "name": "name",
+          "doc": "The name of the database.\n\n"
+        }
+      ],
+      "providers": [
+        {
+          "name": "mysql",
+          "doc": "Manages MySQL database.\n\n* Required binaries: `mysql`, `mysqladmin`.\n* Default for `kernel` == `Linux`."
+        }
+      ]
+    },
+    {
+      "name": "database_grant",
+      "doc": "Manage a database user's rights.",
       "properties": [
         {
           "name": "privileges",
-          "doc": "The privileges the user should have. The possible values are implementation dependent."
+          "doc": "The privileges the user should have. The possible values are implementation dependent.\n\n"
         }
       ],
       "parameters": [
         {
           "name": "name",
-          "doc": "The primary key: either user@host for global privilges or user@host/database for database specific privileges"
+          "doc": "The primary key: either user@host for global privilges or user@host/database for database specific privileges\n\n"
         }
       ],
       "providers": [
         {
           "name": "mysql",
-          "doc": "Uses mysql as database."
+          "doc": "Uses mysql as database.\n\n* Required binaries: `mysql`, `mysqladmin`.\n* Default for `kernel` == `Linux`."
         }
-      ],
-      "name": "database_grant",
-      "doc": "Manage a database user\u0027s rights."
+      ]
     },
     {
+      "name": "database_user",
+      "doc": "Manage a database user. This includes management of users password as well as privileges",
       "properties": [
         {
-          "name": "charset",
-          "doc": "The characterset to use for a database"
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.\n\nValid values are `present`, `absent`. "
+        },
+        {
+          "name": "password_hash",
+          "doc": "The password hash of the user. Use mysql_password() for creating such a hash.\n\nValues can match `/\\w+/`."
+        },
+        {
+          "name": "max_user_connections",
+          "doc": "Max concurrent connections for the user. 0 means no (or global) limit.\n\nValues can match `/\\d+/`."
         }
       ],
       "parameters": [
         {
           "name": "name",
-          "doc": "The name of the database."
+          "doc": "The name of the user. This uses the 'username@hostname' or username@hostname.\n\n"
         }
       ],
       "providers": [
         {
           "name": "mysql",
-          "doc": "Manages MySQL database."
+          "doc": "manage users for a mysql database.\n\n* Required binaries: `mysql`, `mysqladmin`.\n* Default for `kernel` == `Linux`."
         }
-      ],
-      "name": "database",
-      "doc": "Manage databases."
+      ]
     },
     {
+      "name": "mysql_database",
+      "doc": "Manage MySQL databases.",
       "properties": [
         {
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.\n\nValid values are `present`, `absent`. "
+        },
+        {
           "name": "charset",
-          "doc": "The CHARACTER SET setting for the database"
+          "doc": "The CHARACTER SET setting for the database\n\nValues can match `/^\\S+$/`."
         },
         {
           "name": "collate",
-          "doc": "The COLLATE setting for the database"
+          "doc": "The COLLATE setting for the database\n\nValues can match `/^\\S+$/`."
         }
       ],
       "parameters": [
         {
           "name": "name",
-          "doc": "The name of the MySQL database to manage."
+          "doc": "The name of the MySQL database to manage.\n\n"
         }
       ],
       "providers": [
         {
           "name": "mysql",
-          "doc": "Manages MySQL databases."
+          "doc": "Manages MySQL databases.\n\n* Required binaries: `mysql`."
         }
-      ],
-      "name": "mysql_database",
-      "doc": "Manage MySQL databases."
+      ]
     },
     {
+      "name": "mysql_grant",
+      "doc": "Manage a MySQL user's rights.",
       "properties": [
         {
-          "name": "password_hash",
-          "doc": "The password hash of the user. Use mysql_password() for creating such a hash."
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.\n\nValid values are `present`, `absent`. "
         },
-        {
-          "name": "max_user_connections",
-          "doc": "Max concurrent connections for the user. 0 means no (or global) limit."
-        }
-      ],
-      "parameters": [
-        {
-          "name": "name",
-          "doc": "The name of the user. This uses the \u0027username@hostname\u0027 or username@hostname."
-        }
-      ],
-      "providers": [
-        {
-          "name": "mysql",
-          "doc": "manage users for a mysql database."
-        }
-      ],
-      "name": "database_user",
-      "doc": "Manage a database user. This includes management of users password as well as privileges"
-    },
-    {
-      "properties": [
-        {
-          "name": "password_hash",
-          "doc": "The password hash of the user. Use mysql_password() for creating such a hash."
-        },
-        {
-          "name": "max_user_connections",
-          "doc": "Max concurrent connections for the user. 0 means no (or global) limit."
-        },
-        {
-          "name": "max_connections_per_hour",
-          "doc": "Max connections per hour for the user. 0 means no (or global) limit."
-        },
-        {
-          "name": "max_queries_per_hour",
-          "doc": "Max queries per hour for the user. 0 means no (or global) limit."
-        },
-        {
-          "name": "max_updates_per_hour",
-          "doc": "Max updates per hour for the user. 0 means no (or global) limit."
-        }
-      ],
-      "parameters": [
-        {
-          "name": "name",
-          "doc": "The name of the user. This uses the \u0027username@hostname\u0027 or username@hostname."
-        }
-      ],
-      "providers": [
-        {
-          "name": "mysql",
-          "doc": "manage users for a mysql database."
-        }
-      ],
-      "name": "mysql_user",
-      "doc": "Manage a MySQL user. This includes management of users password as well as privileges."
-    },
-    {
-      "properties": [
         {
           "name": "privileges",
-          "doc": "Privileges for user"
+          "doc": "Privileges for user\n\n"
         },
         {
           "name": "table",
-          "doc": "Table to apply privileges to."
+          "doc": "Table to apply privileges to.\n\nValues can match `/.*\\..*/`, `/@/`."
         },
         {
           "name": "user",
-          "doc": "User to operate on."
+          "doc": "User to operate on.\n\n"
         },
         {
           "name": "options",
-          "doc": "Options to grant."
+          "doc": "Options to grant.\n\n"
         }
       ],
       "parameters": [
         {
           "name": "name",
-          "doc": "Name to describe the grant."
+          "doc": "Name to describe the grant.\n\n"
         }
       ],
       "providers": [
@@ -175,113 +173,432 @@
           "name": "mysql",
           "doc": "Set grants for users in MySQL."
         }
+      ]
+    },
+    {
+      "name": "mysql_user",
+      "doc": "Manage a MySQL user. This includes management of users password as well as privileges.",
+      "properties": [
+        {
+          "name": "ensure",
+          "doc": "The basic property that the resource should be in.\n\nValid values are `present`, `absent`. "
+        },
+        {
+          "name": "password_hash",
+          "doc": "The password hash of the user. Use mysql_password() for creating such a hash.\n\nValues can match `/\\w+/`."
+        },
+        {
+          "name": "max_user_connections",
+          "doc": "Max concurrent connections for the user. 0 means no (or global) limit.\n\nValues can match `/\\d+/`."
+        },
+        {
+          "name": "max_connections_per_hour",
+          "doc": "Max connections per hour for the user. 0 means no (or global) limit.\n\nValues can match `/\\d+/`."
+        },
+        {
+          "name": "max_queries_per_hour",
+          "doc": "Max queries per hour for the user. 0 means no (or global) limit.\n\nValues can match `/\\d+/`."
+        },
+        {
+          "name": "max_updates_per_hour",
+          "doc": "Max updates per hour for the user. 0 means no (or global) limit.\n\nValues can match `/\\d+/`."
+        }
       ],
-      "name": "mysql_grant",
-      "doc": "Manage a MySQL user\u0027s rights."
+      "parameters": [
+        {
+          "name": "name",
+          "doc": "The name of the user. This uses the 'username@hostname' or username@hostname.\n\n"
+        }
+      ],
+      "providers": [
+        {
+          "name": "mysql",
+          "doc": "manage users for a mysql database.\n\n* Required binaries: `mysql`."
+        }
+      ]
     }
   ],
   "checksums": {
-    ".bundle/config": "b898efea5e8783d6593fcdabec67e925",
-    ".fixtures.yml": "754de171830d3a00220cdc85bcb794a0",
-    ".forge-release/pom.xml": "c650a84961ad88de03192e23b63b3549",
-    ".forge-release/publish": "1c1d6dd64ef52246db485eb5459aa941",
-    ".forge-release/settings.xml": "06d768a57d582fe1ee078b563427e750",
-    ".forge-release/validate": "7fffde8112f42a1ec986d49ba80ac219",
-    ".nodeset.yml": "f2b857f9fc7a701ff118e28591c12925",
-    ".travis.yml": "35fe54be03fbc47ce9b015b22240e683",
-    "CHANGELOG": "0b5a3135e4367f298a3051861332ee98",
-    "Gemfile": "c0932f60de4a156b0c2c8ffcbc2fbbff",
-    "Gemfile.lock": "f2a55b4706fb51e03397df6cefe7c28e",
+    "CHANGELOG": "2408334d53d090d3ec27e70524cec559",
+    "Gemfile": "9268e935a356ff2253cba2ec3cb9b27a",
+    "Gemfile.lock": "e2f1975e08c378469fa0347dea6eba7b",
     "LICENSE": "6089b6bd1f0d807edb8bdfd76da0b038",
-    "Modulefile": "503aa2fc184c841f2f0bf0c6c9f783f2",
-    "README.md": "954cbd75a8c9355210d137494362e4f6",
+    "Modulefile": "95ddcb07a3af773625147e2daa94d3cf",
+    "README.md": "f0a25e9a800558b555c96f3e3e5db6d8",
     "Rakefile": "0428ea3759a4692c91604396c406a9c1",
     "TODO": "88ca4024a37992b46c34cb46e4ac39e6",
-    "files/mysqltuner.pl": "7e6fcb6d010c85cec68cffa90e6cc5b6",
-    "lib/puppet/parser/functions/mysql_deepmerge.rb": "6f20428e15e98f2368ee63a56412a7c3",
+    "files/mysqltuner.pl": "65056d1386e04fdf22a1fee556c1b9fc",
+    "lib/puppet/parser/functions/mysql_deepmerge.rb": "2b5040ee8cd75a81cf881851e922833a",
     "lib/puppet/parser/functions/mysql_password.rb": "a4c8ec72dede069508dbc266131b06a3",
     "lib/puppet/parser/functions/mysql_strip_hash.rb": "3efe69f1eb189b2913e178b8472aaede",
-    "lib/puppet/provider/database/mysql.rb": "67459a5b7d17b0f37a3638d3cd91db69",
-    "lib/puppet/provider/database_grant/mysql.rb": "45ee6d8ffccef4f53e1f75d24c8acd0f",
-    "lib/puppet/provider/database_user/mysql.rb": "4da5e288bbfd99d4a3e06aa15b105a1a",
-    "lib/puppet/provider/mysql.rb": "5b7aed54664c52d817a8283351bf34bd",
-    "lib/puppet/provider/mysql_database/mysql.rb": "3778dfac523cd12ccfc63b5afe6cbc4f",
-    "lib/puppet/provider/mysql_grant/mysql.rb": "f27f8cc23f74ce59a49172d8e6a0d5dc",
-    "lib/puppet/provider/mysql_user/mysql.rb": "c50e589eafb556c0e964e1fca3f29fd6",
+    "lib/puppet/provider/database/mysql.rb": "10c0c508f88145d0cda948f26f97d86f",
+    "lib/puppet/provider/database_grant/mysql.rb": "bfe3202efcecfe8f5fa98282594f7bed",
+    "lib/puppet/provider/database_user/mysql.rb": "26d55375b308ffa8cf9db68d0e039c5f",
+    "lib/puppet/provider/mysql.rb": "881f4f76b084054f7299fe2de596e4c9",
+    "lib/puppet/provider/mysql_database/mysql.rb": "5c96c71a6f9706cc1b9f79d628fa9a71",
+    "lib/puppet/provider/mysql_grant/mysql.rb": "100421e10f27f7adee4f53ec7778501c",
+    "lib/puppet/provider/mysql_user/mysql.rb": "7eda6cfab27de90e3ee8f6517d2ae3a0",
     "lib/puppet/type/database.rb": "7b4b49b841d41541ce719d1a051ee94b",
     "lib/puppet/type/database_grant.rb": "66fce5df0f3f4111fe37f094965f6f93",
-    "lib/puppet/type/database_user.rb": "f8a151a415fe10da92fb4bd5e473df54",
+    "lib/puppet/type/database_user.rb": "b2a87e3854324fb0ae407a1fbad5802a",
     "lib/puppet/type/mysql_database.rb": "e21a38611edc6cba5454889170bc0ebc",
-    "lib/puppet/type/mysql_grant.rb": "f934aa58da207aa4571a1cca285295c2",
+    "lib/puppet/type/mysql_grant.rb": "082aa9131d7e5871935da409ee16a9fa",
     "lib/puppet/type/mysql_user.rb": "ddb054a5fd03689ae4325fbe003a41d3",
+    "log/2013-07-22_15:31:37/acceptance-run.log": "b4bd93468459b06326b188dcf3ce382b",
+    "log/2013-07-22_15:31:37/acceptance-summary.txt": "078f74dcdc8692dd4470bf30cae001ae",
+    "log/2013-07-22_15:31:37/config.yml": "9aed11261b9165416d52c202465a9531",
+    "log/2013-07-22_16:27:41/acceptance-run.log": "9ff64af8b1bab4eab1746bd6bf349240",
+    "log/2013-07-22_16:27:41/acceptance-summary.txt": "c479e3620f328ca564fc38a65ff40e6d",
+    "log/2013-07-22_16:27:41/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_16:44:17/acceptance-run.log": "e2639d2ad94fa82c9df558789cdd40bb",
+    "log/2013-07-22_16:44:17/acceptance-summary.txt": "ca8dd22cc91b94b6545f110d0b5265ea",
+    "log/2013-07-22_16:44:17/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_16:49:57/acceptance-run.log": "e2639d2ad94fa82c9df558789cdd40bb",
+    "log/2013-07-22_16:49:57/acceptance-summary.txt": "8b3c692b21c4cace2bf2918ed02ea998",
+    "log/2013-07-22_16:49:57/config.yml": "b6b3312cb0f6d5c3b1c48e19472b0ded",
+    "log/2013-07-22_17:05:15/acceptance-run.log": "7d71d5a5decd415ef65a93bb562f1f30",
+    "log/2013-07-22_17:05:15/acceptance-summary.txt": "ecc12545faadd136a20343391df8f19d",
+    "log/2013-07-22_17:05:15/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_17:17:59/acceptance-run.log": "e2639d2ad94fa82c9df558789cdd40bb",
+    "log/2013-07-22_17:17:59/acceptance-summary.txt": "8bfe524a1ee93eeeb8fd39aa2fa84b64",
+    "log/2013-07-22_17:17:59/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_17:20:09/acceptance-run.log": "e2639d2ad94fa82c9df558789cdd40bb",
+    "log/2013-07-22_17:20:09/acceptance-summary.txt": "67408edd1290658de6419dc91fc610c6",
+    "log/2013-07-22_17:20:09/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_17:23:08/acceptance-run.log": "e2639d2ad94fa82c9df558789cdd40bb",
+    "log/2013-07-22_17:23:08/acceptance-summary.txt": "84fd302e6bc8cbbfab35a696e391cd66",
+    "log/2013-07-22_17:23:08/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_17:25:05/acceptance-run.log": "e2639d2ad94fa82c9df558789cdd40bb",
+    "log/2013-07-22_17:25:05/acceptance-summary.txt": "bedfc27669e4955c71c668c58f183725",
+    "log/2013-07-22_17:25:05/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-22_17:27:24/acceptance-run.log": "cfef6449a17739c264d58738a28e060e",
+    "log/2013-07-22_17:27:24/acceptance-summary.txt": "b793a3f6a7864d4133b119dbfbf110d1",
+    "log/2013-07-22_17:27:24/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-23_14:08:32/acceptance-run.log": "cfef6449a17739c264d58738a28e060e",
+    "log/2013-07-23_14:08:32/acceptance-summary.txt": "e10925b5c5a2bc9dab95a96789a083fb",
+    "log/2013-07-23_14:08:32/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-23_14:26:07/acceptance-run.log": "cfef6449a17739c264d58738a28e060e",
+    "log/2013-07-23_14:26:07/acceptance-summary.txt": "a0a9e479c29dca6bbd143a552596b1c4",
+    "log/2013-07-23_14:26:07/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-23_16:23:18/acceptance-run.log": "cfef6449a17739c264d58738a28e060e",
+    "log/2013-07-23_16:23:18/acceptance-summary.txt": "2cfec72f0a037c5367361c6e4920d8cc",
+    "log/2013-07-23_16:23:18/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
+    "log/2013-07-23_16:31:04/acceptance-run.log": "cfef6449a17739c264d58738a28e060e",
+    "log/2013-07-23_16:31:04/acceptance-summary.txt": "1d8f39b8c91e25b4c3511e73b8c5ce3b",
+    "log/2013-07-23_16:31:04/config.yml": "e6c0a34f84e9ee253b550cb7478fc7bc",
     "manifests/backup.pp": "dfa324a48d47935a8423b102458c6516",
-    "manifests/bindings.pp": "5976e9b74a29cc3a102f49867709a08f",
     "manifests/bindings/java.pp": "6a581f1da1690d436ae14832af551ca2",
     "manifests/bindings/perl.pp": "e765d0792afacbe72cf3e65804b78fe7",
     "manifests/bindings/php.pp": "09017ca0adefbb8bf894393371cfad94",
     "manifests/bindings/python.pp": "50c22f04074695f17ea383b307d01ea3",
     "manifests/bindings/ruby.pp": "99f7c01e468136c8e699fcbb36d037fa",
-    "manifests/client.pp": "8077f76fb6d0a20e071f683767a80d7d",
+    "manifests/bindings.pp": "5976e9b74a29cc3a102f49867709a08f",
     "manifests/client/install.pp": "381f70bfbaac921d631e3b115d8ae264",
+    "manifests/client.pp": "ab5a3ece8f5c4cc2174532472bdc5afe",
     "manifests/db.pp": "0dd59f8d1578c25a2517d4fda862624b",
     "manifests/init.pp": "52ad9ac01674695edaf62cc1c48ef4f8",
-    "manifests/params.pp": "033b2e0f88f15b2d8aab3b08ed470abd",
-    "manifests/server.pp": "e7ddee90013fc90072367c9b95569a4e",
+    "manifests/params.pp": "6859251d5627041762aa18dd39a3ab67",
     "manifests/server/account_security.pp": "c793a434142ddaa6a529ed59739368fb",
-    "manifests/server/backup.pp": "ff6239ff4e2c46f42ec9b34a805c6718",
-    "manifests/server/config.pp": "dcc92deb6e2e100bf150016a8fb2a42d",
+    "manifests/server/backup.pp": "670f81ebcecd5b679e9c0c467b9134d4",
+    "manifests/server/config.pp": "e882008e21edd826565d825ad87cd931",
     "manifests/server/install.pp": "8666481a3ea12e9f76c47dfa558c09e6",
     "manifests/server/monitor.pp": "a63731018c171de9e441009d453dcac8",
     "manifests/server/mysqltuner.pp": "4b19b075ecb7a7054cac237e5f50ed16",
-    "manifests/server/root_password.pp": "b9c9f96e24693760ce1238f6f72ab3e7",
+    "manifests/server/providers.pp": "87a019dce5bbb6b18c9aa61b5f99134c",
+    "manifests/server/root_password.pp": "73738c1b6ee42b896db5356575c95af6",
     "manifests/server/service.pp": "e79e2206b06d41956fb6d87fc1d20aa0",
+    "manifests/server.pp": "442990ade0834d54ffe30fb74c4fa9db",
+    "spec/acceptance/mysql_account_delete_spec.rb": "7fc8bb69f32f8a7703744bf7dfe0f599",
+    "spec/acceptance/mysql_backup_spec.rb": "76bfe7266b19f104afbbdf20ecd8a676",
+    "spec/acceptance/mysql_bindings_spec.rb": "3bb58ffb9dd85dd90a9b5c39d82c4cc4",
+    "spec/acceptance/mysql_db_spec.rb": "ae7931036ee44f5ff3d4d494c353ba16",
+    "spec/acceptance/mysql_server_config_spec.rb": "3bac5dd60c6522f32f2591f5c5c960b4",
+    "spec/acceptance/mysql_server_monitor_spec.rb": "cd84fa4d93f3c5df8acbd8a96ee71443",
+    "spec/acceptance/mysql_server_root_password_spec.rb": "20c5b4555d97013992790289466ade03",
+    "spec/acceptance/mysql_server_spec.rb": "24433218dd0a8f5378f73f524b17230e",
+    "spec/acceptance/nodesets/centos-64-x64-pe.yml": "ec075d95760df3d4702abea1ce0a829b",
+    "spec/acceptance/nodesets/centos-64-x64.yml": "092dd2c588a9f87fa1fb12997c0723ef",
+    "spec/acceptance/nodesets/default.yml": "092dd2c588a9f87fa1fb12997c0723ef",
+    "spec/acceptance/nodesets/fedora-18-x64.yml": "80e41b1ee16ea489f53164bfdae58855",
+    "spec/acceptance/nodesets/ubuntu-server-10044-x64.yml": "75e86400b7889888dc0781c0ae1a1297",
+    "spec/acceptance/nodesets/ubuntu-server-12042-x64.yml": "d30d73e34cd50b043c7d14e305955269",
+    "spec/acceptance/types/mysql_grant_spec.rb": "c9cf039ad2728a725c05d096af06271b",
+    "spec/acceptance/types/mysql_user_spec.rb": "918f8ae6f7768fe31f2d961649fd9fb6",
     "spec/classes/mysql_bindings_spec.rb": "cfc90d020af62a2315129c84f6acc7d9",
     "spec/classes/mysql_client_spec.rb": "1849bea122f7282153cbc46ca04aa851",
     "spec/classes/mysql_server_account_security_spec.rb": "e223281077baa230fb6b7387f56af6d8",
-    "spec/classes/mysql_server_backup_spec.rb": "4c7e64b955bf1df76aead3bf93c2ae1c",
+    "spec/classes/mysql_server_backup_spec.rb": "7fa2c4a0d6210bee9054492f10c44936",
     "spec/classes/mysql_server_monitor_spec.rb": "2bf20049616769424afd4a5137e25511",
     "spec/classes/mysql_server_mysqltuner_spec.rb": "7a098808c21e3f08cd26237a96acc878",
-    "spec/classes/mysql_server_spec.rb": "b38faa1a9644e04b1fd72a3517a2b043",
+    "spec/classes/mysql_server_spec.rb": "14f07cdc8077683b79568c79e3c12ab9",
     "spec/defines/mysql_db_spec.rb": "26b348846df5013819c7c9f18090ffc4",
+    "spec/fixtures/manifests/site.pp": "d41d8cd98f00b204e9800998ecf8427e",
+    "spec/fixtures/modules/stdlib/CHANGELOG": "344383410cb78409f0c59ecf38e8c21a",
+    "spec/fixtures/modules/stdlib/CONTRIBUTING.md": "7fcaaec4913b3d7c123510329ecc4b2d",
+    "spec/fixtures/modules/stdlib/Gemfile": "cd4e7462902c9bcce1c053908e3b83c4",
+    "spec/fixtures/modules/stdlib/LICENSE": "38a048b9d82e713d4e1b2573e370a756",
+    "spec/fixtures/modules/stdlib/Modulefile": "351bba73290cd526ca7bacd4c7d250dc",
+    "spec/fixtures/modules/stdlib/README.markdown": "66c675e733ba8e5ce2b0041a7d5f365c",
+    "spec/fixtures/modules/stdlib/README_DEVELOPER.markdown": "220a8b28521b5c5d2ea87c4ddb511165",
+    "spec/fixtures/modules/stdlib/README_SPECS.markdown": "82bb4c6abbb711f40778b162ec0070c1",
+    "spec/fixtures/modules/stdlib/RELEASE_PROCESS.markdown": "94b92bc99ac4106ba1a74d5c04e520f9",
+    "spec/fixtures/modules/stdlib/Rakefile": "dfa334598bfd087adf11533a72d71106",
+    "spec/fixtures/modules/stdlib/lib/facter/facter_dot_d.rb": "b35b8b59ec579901444f984127f0b833",
+    "spec/fixtures/modules/stdlib/lib/facter/pe_version.rb": "4a9353952963b011759f3e6652a10da5",
+    "spec/fixtures/modules/stdlib/lib/facter/puppet_vardir.rb": "c7ddc97e8a84ded3dd93baa5b9b3283d",
+    "spec/fixtures/modules/stdlib/lib/facter/root_home.rb": "f559294cceafcf70799339627d94871d",
+    "spec/fixtures/modules/stdlib/lib/facter/util/puppet_settings.rb": "9f1d2593d0ae56bfca89d4b9266aeee1",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/abs.rb": "32161bd0435fdfc2aec2fc559d2b454b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/any2array.rb": "a81e71d6b67a551d38770ba9a1948a75",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/base64.rb": "db21cb82b82e1fc88931651f2b48b276",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/bool2num.rb": "8e627eee990e811e35e7e838c586bd77",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/capitalize.rb": "14481fc8c7c83fe002066ebcf6722f17",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/chomp.rb": "719d46923d75251f7b6b68b6e015cccc",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/chop.rb": "4691a56e6064b792ed4575e4ad3f3d20",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/concat.rb": "f28a09811ff4d19bb5e7a540e767d65c",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/count.rb": "9eb74eccd93e2b3c87fd5ea14e329eba",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/deep_merge.rb": "560c0e075b7d2c58e65fc87903e326f5",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/defined_with_params.rb": "ffab4433d03f32b551f2ea024a2948fc",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/delete.rb": "96e569dac96b8c9387e9303445d73048",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/delete_at.rb": "6bc24b79390d463d8be95396c963381a",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/delete_undef_values.rb": "276b97f130701d2060b12de2b43e556b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/delete_values.rb": "1a2d13851bfd96a00fb97759a9232575",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/difference.rb": "e31b95fbaf974cf853a510177368bfb9",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/dirname.rb": "bef7214eb89db3eb8f7ee5fc9dca0233",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/downcase.rb": "9204a04c2a168375a38d502db8811bbe",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/empty.rb": "ae92905c9d94ddca30bf56b7b1dabedf",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/ensure_packages.rb": "74d0dc0bda9c65579b86f26a132d0534",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/ensure_resource.rb": "6678127386e77bbc0f09db7b5a32ab6a",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/flatten.rb": "25777b76f9719162a8bab640e5595b7a",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/floor.rb": "c5a960e9714810ebb99198ff81a11a3b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/fqdn_rotate.rb": "20743a138c56fc806a35cb7b60137dbc",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/get_module_path.rb": "d4bf50da25c0b98d26b75354fa1bcc45",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/getparam.rb": "4dd7a0e35f4a3780dcfc9b19b4e0006e",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/getvar.rb": "10bf744212947bc6a7bfd2c9836dbd23",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/grep.rb": "5682995af458b05f3b53dd794c4bf896",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/has_interface_with.rb": "8d3ebca805dc6edb88b6b7a13d404787",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/has_ip_address.rb": "ee207f47906455a5aa49c4fb219dd325",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/has_ip_network.rb": "b4d726c8b2a0afac81ced8a3a28aa731",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/has_key.rb": "7cd9728c38f0b0065f832dabd62b0e7e",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/hash.rb": "9d072527dfc7354b69292e9302906530",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/intersection.rb": "924ac4aceec7b896952166a7ec08fdb1",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_array.rb": "875ca4356cb0d7a10606fb146b4a3d11",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_bool.rb": "e693b7c4b5366cff1380b6e0c7dd7b11",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_domain_name.rb": "fba9f855df3bbf90d72dfd5201f65d2b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_float.rb": "f1b0d333061d31bf0c25bd4c33dc134b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_function_available.rb": "88c63869cb5df3402bc9756a8d40c16d",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_hash.rb": "8c7d9a05084dab0389d1b779c8a05b1a",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_integer.rb": "c665be82686aa4729959bb42c66a7510",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_ip_address.rb": "a714a736c1560e8739aaacd9030cca00",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_mac_address.rb": "288bd4b38d4df42a83681f13e7eaaee0",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_numeric.rb": "93ddc9d4c0834a5e5e0562d7b3cdce91",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/is_string.rb": "2bd9a652bbb2668323eee6c57729ff64",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/join.rb": "a285a05c015ae278608f6454aef211ea",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/join_keys_to_values.rb": "f29da49531228f6ca5b3aa0df00a14c2",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/keys.rb": "eb6ac815ea14fbf423580ed903ef7bad",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/loadyaml.rb": "2b912f257aa078e376d3b3f6a86c2a00",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/lstrip.rb": "210b103f78622e099f91cc2956b6f741",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/max.rb": "f652fd0b46ef7d2fbdb42b141f8fdd1d",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/member.rb": "541e67d06bc4155e79b00843a125e9bc",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/merge.rb": "f3dcc5c83440cdda2036cce69b61a14b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/min.rb": "0d2a1b7e735ab251c5469e735fa3f4c6",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/num2bool.rb": "605c12fa518c87ed2c66ae153e0686ce",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/parsejson.rb": "e7f968c34928107b84cd0860daf50ab1",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/parseyaml.rb": "00f10ec1e2b050e23d80c256061ebdd7",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/pick.rb": "bf01f13bbfe2318e7f6a302ac7c4433f",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/prefix.rb": "aebbea0290be82a4ae89ddfffbee1125",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/range.rb": "ac198722669e461b5685643655bb418c",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/reject.rb": "689f6a7c961a55fe9dcd240921f4c7f9",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/reverse.rb": "1386371c0f5301055fdf99079e862b3e",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/rstrip.rb": "8a0d69876bdbc88a2054ba41c9c38961",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/shuffle.rb": "6445e6b4dc62c37b184a60eeaf34414b",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/size.rb": "8972d48c0f9e487d659bd7326b40b642",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/sort.rb": "504b033b438461ca4f9764feeb017833",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/squeeze.rb": "541f85b4203b55c9931d3d6ecd5c75f8",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/str2bool.rb": "c822a8944747f5624b13f2da0df8db21",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/str2saltedsha512.rb": "49afad7b386be38ce53deaefef326e85",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/strftime.rb": "e02e01a598ca5d7d6eee0ba22440304a",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/strip.rb": "273d547c7b05c0598556464dfd12f5fd",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/suffix.rb": "109279db4180441e75545dbd5f273298",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/swapcase.rb": "4902f38f0b9292afec66d40fee4b02ec",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/time.rb": "08d88d52abd1e230e3a2f82107545d48",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/to_bytes.rb": "83f23c33adbfa42b2a9d9fc2db3daeb4",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/type.rb": "62f914d6c90662aaae40c5539701be60",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/union.rb": "137998fe47decf25aede20f0c0155a4c",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/unique.rb": "217ccce6d23235af92923f50f8556963",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/upcase.rb": "a5744a74577cfa136fca2835e75888d3",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/uriescape.rb": "321b8d2c33a5ea48337e1293774db4e0",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_absolute_path.rb": "385137ac24a2dec6cecc4e6ea75be442",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_array.rb": "72b29289b8af1cfc3662ef9be78911b8",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_augeas.rb": "d4acca7b8a9fdada9ae39e5101902cc1",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_bool.rb": "a712634a000024398b3c6cd4ecc46463",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_cmd.rb": "78fd21cb3fc52efc3b53ba2b3301de18",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_hash.rb": "e9cfaca68751524efe16ecf2f958a9a0",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_ipv4_address.rb": "a8fb6f0ca36aa460d462c07c2af5d5a2",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_ipv6_address.rb": "4699238e4cad60e7e1428905523eaeb7",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_re.rb": "c6664b3943bc820415a43f16372dc2a9",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_slength.rb": "7e67c213509b9383707819cc612b2a29",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/validate_string.rb": "6afcbc51f83f0714348b8d61e06ea7eb",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/values.rb": "066a6e4170e5034edb9a80463dff2bb5",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/values_at.rb": "094ac110ce9f7a5b16d0c80a0cf2243c",
+    "spec/fixtures/modules/stdlib/lib/puppet/parser/functions/zip.rb": "a80782461ed9465f0cd0c010936f1855",
+    "spec/fixtures/modules/stdlib/lib/puppet/provider/file_line/ruby.rb": "10d65268d2d1e75b5dae014974b79d60",
+    "spec/fixtures/modules/stdlib/lib/puppet/type/anchor.rb": "bbd36bb49c3b554f8602d8d3df366c0c",
+    "spec/fixtures/modules/stdlib/lib/puppet/type/file_line.rb": "a1eceef6bd7cbfe99892cf3ee57ef2b4",
+    "spec/fixtures/modules/stdlib/manifests/init.pp": "f2ba5f36e7227ed87bbb69034fc0de8b",
+    "spec/fixtures/modules/stdlib/manifests/stages.pp": "cc6ed1751d334b0ea278c0335c7f0b5a",
+    "spec/fixtures/modules/stdlib/spec/classes/anchor_spec.rb": "695d65275c3ac310d7fa23b91f8bbb4a",
+    "spec/fixtures/modules/stdlib/spec/functions/defined_with_params_spec.rb": "3bdfac38e3d6f06140ff2e926f4ebed2",
+    "spec/fixtures/modules/stdlib/spec/functions/ensure_packages_spec.rb": "125964d3c54b9b2eccb8bdac949dd125",
+    "spec/fixtures/modules/stdlib/spec/functions/ensure_resource_spec.rb": "3423a445e13efc7663a71c6641d49d07",
+    "spec/fixtures/modules/stdlib/spec/functions/getparam_spec.rb": "122f37cf9ec7489f1dae10db39c871b5",
+    "spec/fixtures/modules/stdlib/spec/monkey_patches/alias_should_to_must.rb": "7cd4065c63f06f1ab3aaa1c5f92af947",
+    "spec/fixtures/modules/stdlib/spec/monkey_patches/publicize_methods.rb": "ce2c98f38b683138c5ac649344a39276",
+    "spec/fixtures/modules/stdlib/spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
+    "spec/fixtures/modules/stdlib/spec/spec_helper.rb": "4449b0cafd8f7b2fb440c0cdb0a1f2b3",
+    "spec/fixtures/modules/stdlib/spec/unit/facter/pe_required_facts_spec.rb": "d4af8dc9f22b50369c25c761ed3be04c",
+    "spec/fixtures/modules/stdlib/spec/unit/facter/pe_version_spec.rb": "ef031cca838f36f99b1dab3259df96a5",
+    "spec/fixtures/modules/stdlib/spec/unit/facter/root_home_spec.rb": "4f4c4236ac2368d2e27fd2f3eb606a19",
+    "spec/fixtures/modules/stdlib/spec/unit/facter/util/puppet_settings_spec.rb": "345bcbef720458e25be0190b7638e4d9",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/abs_spec.rb": "0a5864a29a8e9e99acc483268bd5917c",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/any2array_spec.rb": "167e114cfa222de971bf8be141766b6a",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/base64_spec.rb": "fe16d992be54dbb06d040f1b0e189571",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/bool2num_spec.rb": "67c3055d5d4e4c9fbcaca82038a09081",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/capitalize_spec.rb": "82a4209a033fc88c624f708c12e64e2a",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/chomp_spec.rb": "3cd8e2fe6b12efeffad94cce5b693b7c",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/chop_spec.rb": "4e9534d25b952b261c9f46add677c390",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/concat_spec.rb": "c21aaa84609f92290d5ffb2ce8ea4bf5",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/count_spec.rb": "db98ef89752a7112425f0aade10108e0",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/deep_merge_spec.rb": "2dd783dacdc2aa4c817a310766975354",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/delete_at_spec.rb": "93236b63971287705f4672554d427ed0",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/delete_spec.rb": "09c9534225644f21dcad5e9c66ab6d1e",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/delete_undef_values_spec.rb": "698347c3d8baba26afdb4b58d3b9e3be",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/delete_values_spec.rb": "b5f1aac02243ca68ffb384ddfee7c1b6",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/difference_spec.rb": "e64c1501699fef8eb1037a3ca60a05a6",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/dirname_spec.rb": "1d7cf70468c2cfa6dacfc75935322395",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/downcase_spec.rb": "b0197829512f2e92a2d2b06ce8e2226f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/empty_spec.rb": "028c30267d648a172d8a81a9262c3abe",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/flatten_spec.rb": "583c9a70f93e492cfb22ffa1811f6aa0",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/floor_spec.rb": "d01ef7dfe0245d7a0a73d7df13cb02e3",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/fqdn_rotate_spec.rb": "c67b71737bee9936f5261d41a37bad46",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/get_module_path_spec.rb": "b7ea196f548b1a9a745ab6671295ab27",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/getvar_spec.rb": "842bf88d47077a9ae64097b6e39c3364",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/grep_spec.rb": "78179537496a7150469e591a95e255d8",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/has_interface_with_spec.rb": "7c16d731c518b434c81b8cb2227cc916",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/has_ip_address_spec.rb": "f53c7baeaf024ff577447f6c28c0f3a7",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/has_ip_network_spec.rb": "885ea8a4c987b735d683b742bf846cb1",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/has_key_spec.rb": "3e4e730d98bbdfb88438b6e08e45868e",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/hash_spec.rb": "826337a92d8f7a189b7ac19615db0ed7",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/intersection_spec.rb": "1b1f1a3900a1f1e165692b056e766fba",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_array_spec.rb": "8c020af9c360abdbbf1ba887bb26babe",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_bool_spec.rb": "3219ba1500de75161bfb4f292404d1fa",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_domain_name_spec.rb": "8eed3a9eb9334bf6a473ad4e2cabc2ec",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_float_spec.rb": "171fc0e382d9856c2d8db2b70c9ec9cd",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_function_available.rb": "c8858a3c6253713cce0113a98d229b5d",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_hash_spec.rb": "408e121a5e30c4c5c4a0a383beb6e209",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_integer_spec.rb": "c848f20da5f62ac4bbaf0f6c1485c88f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_ip_address_spec.rb": "6040a9bae4e5c853966148b634501157",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_mac_address_spec.rb": "644cd498b426ff2f9ea9cbc5d8e141d7",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_numeric_spec.rb": "65f2ad0e70d9b60c601740351eba94fd",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/is_string_spec.rb": "5c015d8267de852da3a12b984e077092",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/join_keys_to_values_spec.rb": "7c7937411b7fe4bb944c0c022d3a96b0",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/join_spec.rb": "c3b50c39390a86b493511be2c6722235",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/keys_spec.rb": "35cc2ed490dc68da6464f245dfebd617",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/loadyaml_spec.rb": "ce86614d8aaceec93653ecf299d3d441",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/lstrip_spec.rb": "1fc2c2d80b5f724a358c3cfeeaae6249",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/max_spec.rb": "5562bccc643443af7e4fa7c9d1e52b8b",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/member_spec.rb": "067c60985efc57022ca1c5508d74d77f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/merge_spec.rb": "0457499d31f78dc163ba8572d35fb4e8",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/min_spec.rb": "bf80bf58261117bb24392670b624a611",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/num2bool_spec.rb": "8cd5b46b7c8e612dfae3362e3a68a5f9",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/parsejson_spec.rb": "37ab84381e035c31d6a3dd9bf73a3d53",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/parseyaml_spec.rb": "65dfed872930ffe0d21954c15daaf498",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/pick_spec.rb": "34382f7483b6c10d38831de2169777c2",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/prefix_spec.rb": "7245749e27bafe1b36c1c5bae6f705c7",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/range_spec.rb": "c40b3c6d4031fc541c2421ff7b8c41fe",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/reject_spec.rb": "8e16c9f064870e958b6278261e480954",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/reverse_spec.rb": "48169990e59081ccbd112b6703418ce4",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/rstrip_spec.rb": "a408e933753c9c323a05d7079d32cbb3",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/shuffle_spec.rb": "2141a54d2fb3cf725b88184d639677f4",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/size_spec.rb": "d126b696b21a8cd754d58f78ddba6f06",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/sort_spec.rb": "7039cd230a94e95d9d1de2e1094acae2",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/squeeze_spec.rb": "df5b349c208a9a2a4d4b8e6d9324756f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/str2bool_spec.rb": "60e3eaea48b0f6efccc97010df7d912c",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/str2saltedsha512_spec.rb": "1de174be8835ba6fef86b590887bb2cc",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/strftime_spec.rb": "bf140883ecf3254277306fa5b25f0344",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/strip_spec.rb": "a01796bebbdabd3fad12b0662ea5966e",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/suffix_spec.rb": "ee875e2d09d7ffc363bf6c34d9ef322f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/swapcase_spec.rb": "0660ce8807608cc8f98ad1edfa76a402",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/time_spec.rb": "b6d0279062779efe5153fe5cfafc5bbd",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/to_bytes_spec.rb": "80aaf68cf7e938e46b5278c1907af6be",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/type_spec.rb": "422f2c33458fe9b0cc9614d16f7573ba",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/union_spec.rb": "c4f72a55e186813cd3a47a83ba3e9a61",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/unique_spec.rb": "2df8b3b2edb9503943cb4dcb4a371867",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/upcase_spec.rb": "813668919bc62cdd1d349dafc19fbbb3",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/uriescape_spec.rb": "204e9b1566e330a0234761ac8ac7083f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_absolute_path_spec.rb": "07839082d24d5a7628fd5bce6c8b35c3",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_array_spec.rb": "bcd231229554785c4270ca92ef99cb60",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_augeas_spec.rb": "1d5bcfbf97dc56b45734248a14358d4f",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_bool_spec.rb": "32a580f280ba62bf17ccd30460d357bd",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_cmd_spec.rb": "8646d28566f84405fd26fc04e33affb8",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_hash_spec.rb": "8529c74051ceb71e6b1b97c9cecdf625",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_ipv4_address_spec.rb": "41af73e7d49bb37e5f225535e1561c02",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_ipv6_address_spec.rb": "86cda9d83443d28404876e59a2496f38",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_re_spec.rb": "b21292ad2f30c0d43ab2f0c2df0ba7d5",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_slength_spec.rb": "73273a083a26941b3f7c1e3b2e18b3e2",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/validate_string_spec.rb": "64a4f681084cba55775a070f7fab5e0c",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/values_at_spec.rb": "de45fd8abbc4c037c3c4fac2dcf186f9",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/values_spec.rb": "0ac9e141ed1f612d7cc224f747b2d1d9",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/parser/functions/zip_spec.rb": "06a86e4e70d2aea63812582aae1d26c4",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/provider/file_line/ruby_spec.rb": "c071ba4230615b4a912b970136e65b93",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/type/anchor_spec.rb": "a5478a72a7fab2d215f39982a9230c18",
+    "spec/fixtures/modules/stdlib/spec/unit/puppet/type/file_line_spec.rb": "d9f4e08e8b98e565a07f1b995593fa89",
+    "spec/fixtures/modules/stdlib/spec/watchr.rb": "b588ddf9ef1c19ab97aa892cc776da73",
+    "spec/fixtures/modules/stdlib/tests/file_line.pp": "67727539aa7b7dd76f06626fe734f7f7",
+    "spec/fixtures/modules/stdlib/tests/has_interface_with.pp": "59c98b4af0d39fc11d1ef4c7a6dc8f7a",
+    "spec/fixtures/modules/stdlib/tests/has_ip_address.pp": "93ce02915f67ddfb43a049b2b84ef391",
+    "spec/fixtures/modules/stdlib/tests/has_ip_network.pp": "abc05686797a776ea8c054657e6f7456",
+    "spec/fixtures/modules/stdlib/tests/init.pp": "1d98070412c76824e66db4b7eb74d433",
+    "spec/fixtures/system/distro_commands.yaml": "d9617961568154565a6725a3831408d3",
     "spec/spec.opts": "a600ded995d948e393fbe2320ba8e51c",
     "spec/spec_helper.rb": "92fefec2bd21423ec2aece165375678b",
-    "spec/spec_helper_system.rb": "30ef76d722878ce9049203e753663335",
+    "spec/spec_helper_acceptance.rb": "64aefcfff6c0540ed30a2c3b7ed81926",
+    "spec/spec_helper_system.rb": "fc38d5cb8b05132b6dbc126923ac9a63",
     "spec/system/mysql_account_delete_spec.rb": "ff8d45ad704f7e3c5fdcae7a4be2ea6e",
-    "spec/system/mysql_backup_spec.rb": "e30ef8f335f216afa489077643f57c98",
+    "spec/system/mysql_backup_spec.rb": "8d5db44218a79ba695ef41228ebf4ab2",
     "spec/system/mysql_bindings_spec.rb": "1e8cb8b2eb50ee3a7f663d6bc979ae2d",
     "spec/system/mysql_db_spec.rb": "798771e3185a52fdc29513bf4eb33d15",
     "spec/system/mysql_server_monitor_spec.rb": "5f282becde15a434aee3f56c99e61ca2",
-    "spec/system/mysql_server_root_password_spec.rb": "74f1f9e52c90e8d36b1cf7b3e17f3e8f",
-    "spec/system/mysql_server_spec.rb": "f12e1a4a3602ce165308c7ef792c3a23",
-    "spec/system/types/mysql_grant_spec.rb": "80f472c0c00bb1a6bf0b20528d07405c",
+    "spec/system/mysql_server_root_password_spec.rb": "00054ea9de19903b7947144366fd09e6",
+    "spec/system/mysql_server_spec.rb": "4976275835cf25bb031a2491e7395a19",
+    "spec/system/types/mysql_grant_spec.rb": "7224f1d7d44e63a5d3a44b43cc38be5d",
     "spec/system/types/mysql_user_spec.rb": "63f1d4c5136291b3cfba33a07e8bb37d",
     "spec/unit/mysql_password_spec.rb": "7e1f9c635cb9dd4143054e096515006b",
-    "spec/unit/puppet/functions/mysql_deepmerge_spec.rb": "5ce61731026b4d5f4947234f7ad88671",
-    "spec/unit/puppet/provider/database/mysql_spec.rb": "ba54011f4c5adac3edd8bc6217771a36",
-    "spec/unit/puppet/provider/database_grant/mysql_spec.rb": "8f41819d0365c88499497da9f2a14445",
-    "spec/unit/puppet/provider/database_user/mysql_spec.rb": "92fd8c9c54348547ea20617fde3c6ce3",
-    "spec/unit/puppet/provider/mysql_database/mysql_spec.rb": "979e9c71e9d8ff6e9419c12c9d10e427",
-    "spec/unit/puppet/provider/mysql_user/mysql_spec.rb": "3ead98da6958cd2fa09fc72579b6aa1f",
+    "spec/unit/puppet/functions/mysql_deepmerge_spec.rb": "89741450d6098c7ed30448347c6de535",
+    "spec/unit/puppet/provider/database/mysql_spec.rb": "3bb92bdaaddfd54e7700012b2418f1ba",
+    "spec/unit/puppet/provider/database_grant/mysql_spec.rb": "261c22e57374b6651b87fcac86c9b563",
+    "spec/unit/puppet/provider/database_user/mysql_spec.rb": "50709cf2cf3f852a56de1856222b9b1f",
+    "spec/unit/puppet/provider/mysql_database/mysql_spec.rb": "9636e7c9979fe1d4de9ec2b53f048ece",
+    "spec/unit/puppet/provider/mysql_user/mysql_spec.rb": "d59edf286efa51990d0db1c0307e91ea",
     "spec/unit/puppet/type/mysql_database_spec.rb": "0b32abc822e7613bdbb46f0a35c5b999",
+    "spec/unit/puppet/type/mysql_grant_spec.rb": "8e39370dba2a816af287f461d3b044ae",
     "spec/unit/puppet/type/mysql_user_spec.rb": "1a20ac660f54f9976bb5a0c03c339efc",
-    "templates/my.cnf.erb": "700a3b7133dd48b00d5efb0029d6a36c",
+    "templates/my.cnf.erb": "f0a83142e3e7add368260e0594758852",
     "templates/my.cnf.pass.erb": "30b24a3f29fcc644bd3a73929305cda0",
     "templates/my.conf.cnf.erb": "5ebda0d5d774b2a51c25c43fbfed544a",
-    "templates/mysqlbackup.sh.erb": "b5ca36fac16da99ec88344addd03b997",
+    "templates/mysqlbackup.sh.erb": "4b1eba907c4a20e4be441f78a6cc87c4",
     "tests/backup.pp": "caae4da564c1f663341bbe50915a5f7d",
+    "tests/bindings.pp": "dda8795d67098b66aa65e81ccc48ed73",
     "tests/init.pp": "6b34827ac4731829c8a117f0b3fb8167",
     "tests/java.pp": "0ad9de4f9f2c049642bcf08124757085",
     "tests/mysql_database.pp": "2a85cd95a9952e3d93aa05f8f236551e",
-    "tests/mysql_grant.pp": "e7dc9d7820ff4fa48b744749986c0d82",
+    "tests/mysql_grant.pp": "cd42336a6c7b2d27f5d5d6d0e310ee1a",
     "tests/mysql_user.pp": "7aa29740f3b6cd8a7041d59af2d595cc",
     "tests/perl.pp": "6e496f19eaae83c90ce8b93236d44bca",
     "tests/python.pp": "b093828acfed9c14e25ebdd60d90c282",
     "tests/ruby.pp": "6c5071fcaf731995c9b8e31e00eaffa0",
-    "tests/server.pp": "72e22552a95b9a5e4a349dbfc13639dc",
     "tests/server/account_security.pp": "47f79d7ae9eac2bf2134db27abf1db37",
-    "tests/server/config.pp": "619b4220138a12c6cb5f10af9867d8a1"
-  },
-  "source": "git://github.com/puppetlabs/puppetlabs-mysql.git",
-  "project_page": "http://github.com/puppetlabs/puppetlabs-mysql",
-  "license": "Apache 2.0"
+    "tests/server/config.pp": "619b4220138a12c6cb5f10af9867d8a1",
+    "tests/server.pp": "72e22552a95b9a5e4a349dbfc13639dc"
+  }
 }

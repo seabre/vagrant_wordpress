@@ -1,0 +1,23 @@
+    Test Suite: acceptance @ 2013-07-23 14:08:32 -0700
+
+    - Host Configuration Summary -
+
+
+            - Test Case Summary for suite 'acceptance' -
+     Total Suite Time: 973.91 seconds
+    Average Test Time: 973.91 seconds
+            Attempted: 1
+               Passed: 0
+               Failed: 0
+              Errored: 1
+              Skipped: 0
+              Pending: 0
+
+    - Specific Test Case Status -
+      
+Failed Tests Cases:
+Errored Tests Cases:
+Skipped Tests Cases:
+Pending Tests Cases:
+
+
