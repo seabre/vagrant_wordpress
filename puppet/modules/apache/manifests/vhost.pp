@@ -93,16 +93,16 @@ define apache::vhost(
     $ip_based                    = false,
     $add_listen                  = true,
     $docroot_owner               = 'root',
-    $docroot_group               = $apache::params::root_group,
+    $docroot_group               = $::apache::params::root_group,
     $serveradmin                 = undef,
     $ssl                         = false,
-    $ssl_cert                    = $apache::default_ssl_cert,
-    $ssl_key                     = $apache::default_ssl_key,
-    $ssl_chain                   = $apache::default_ssl_chain,
-    $ssl_ca                      = $apache::default_ssl_ca,
-    $ssl_crl_path                = $apache::default_ssl_crl_path,
-    $ssl_crl                     = $apache::default_ssl_crl,
-    $ssl_certs_dir               = $apache::params::ssl_certs_dir,
+    $ssl_cert                    = $::apache::default_ssl_cert,
+    $ssl_key                     = $::apache::default_ssl_key,
+    $ssl_chain                   = $::apache::default_ssl_chain,
+    $ssl_ca                      = $::apache::default_ssl_ca,
+    $ssl_crl_path                = $::apache::default_ssl_crl_path,
+    $ssl_crl                     = $::apache::default_ssl_crl,
+    $ssl_certs_dir               = $::apache::params::ssl_certs_dir,
     $ssl_protocol                = undef,
     $ssl_cipher                  = undef,
     $ssl_honorcipherorder        = undef,
@@ -118,7 +118,7 @@ define apache::vhost(
     $override                    = ['None'],
     $directoryindex              = '',
     $vhost_name                  = '*',
-    $logroot                     = $apache::logroot,
+    $logroot                     = $::apache::logroot,
     $log_level                   = undef,
     $access_log                  = true,
     $access_log_file             = undef,
@@ -138,9 +138,9 @@ define apache::vhost(
     $scriptaliases               = [],
     $proxy_dest                  = undef,
     $proxy_pass                  = undef,
-    $suphp_addhandler            = $apache::params::suphp_addhandler,
-    $suphp_engine                = $apache::params::suphp_engine,
-    $suphp_configpath            = $apache::params::suphp_configpath,
+    $suphp_addhandler            = $::apache::params::suphp_addhandler,
+    $suphp_engine                = $::apache::params::suphp_engine,
+    $suphp_configpath            = $::apache::params::suphp_configpath,
     $php_admin_flags             = [],
     $php_admin_values            = [],
     $no_proxy_uris               = [],
@@ -153,14 +153,18 @@ define apache::vhost(
     $headers                     = undef,
     $request_headers             = undef,
     $rewrites                    = undef,
+    $rewrite_base                = undef,
     $rewrite_rule                = undef,
     $rewrite_cond                = undef,
     $setenv                      = [],
     $setenvif                    = [],
     $block                       = [],
     $ensure                      = 'present',
+    $wsgi_application_group      = undef,
     $wsgi_daemon_process         = undef,
     $wsgi_daemon_process_options = undef,
+    $wsgi_import_script          = undef,
+    $wsgi_import_script_options  = undef,
     $wsgi_process_group          = undef,
     $wsgi_script_aliases         = undef,
     $custom_fragment             = undef,
@@ -169,12 +173,14 @@ define apache::vhost(
     $fastcgi_socket              = undef,
     $fastcgi_dir                 = undef,
     $additional_includes         = [],
+    $apache_version              = $::apache::apache_version
   ) {
   # The base class must be included first because it is used by parameter defaults
   if ! defined(Class['apache']) {
     fail('You must include the apache base class before using any apache defined resources')
   }
-  $apache_name = $apache::params::apache_name
+
+  $apache_name = $::apache::params::apache_name
 
   validate_re($ensure, '^(present|absent)$',
   "${ensure} is not supported for ensure.
@@ -194,6 +200,9 @@ define apache::vhost(
   }
 
   # Deprecated backwards-compatibility
+  if $rewrite_base {
+    warning('Apache::Vhost: parameter rewrite_base is deprecated in favor of rewrites')
+  }
   if $rewrite_rule {
     warning('Apache::Vhost: parameter rewrite_rule is deprecated in favor of rewrites')
   }
@@ -206,6 +215,9 @@ define apache::vhost(
   }
   if $wsgi_daemon_process_options {
     validate_hash($wsgi_daemon_process_options)
+  }
+  if $wsgi_import_script_options {
+    validate_hash($wsgi_import_script_options)
   }
   if $itk {
     validate_hash($itk)
@@ -229,13 +241,13 @@ define apache::vhost(
   }
 
   if $ssl and $ensure == 'present' {
-    include apache::mod::ssl
+    include ::apache::mod::ssl
     # Required for the AddType lines.
-    include apache::mod::mime
+    include ::apache::mod::mime
   }
 
   if $virtual_docroot {
-    include apache::mod::vhost_alias
+    include ::apache::mod::vhost_alias
   }
 
   # This ensures that the docroot exists
@@ -265,7 +277,7 @@ define apache::vhost(
   if $access_log_file {
     $access_log_destination = "${logroot}/${access_log_file}"
   } elsif $access_log_pipe {
-    $access_log_destination = "${access_log_pipe}"
+    $access_log_destination = $access_log_pipe
   } elsif $access_log_syslog {
     $access_log_destination = $access_log_syslog
   } else {
@@ -279,7 +291,7 @@ define apache::vhost(
   if $error_log_file {
     $error_log_destination = "${logroot}/${error_log_file}"
   } elsif $error_log_pipe {
-    $error_log_destination = "${error_log_pipe}"
+    $error_log_destination = $error_log_pipe
   } elsif $error_log_syslog {
     $error_log_destination = $error_log_syslog
   } else {
@@ -327,50 +339,50 @@ define apache::vhost(
       fail("Apache::Vhost[${name}]: Mixing IP and non-IP Listen directives is not possible; check the add_listen parameter of the apache::vhost define to disable this")
     }
     if ! defined(Apache::Listen[$listen_addr_port]) and $listen_addr_port and $ensure == 'present' {
-      apache::listen { $listen_addr_port: }
+      ::apache::listen { $listen_addr_port: }
     }
   }
   if ! $ip_based {
     if ! defined(Apache::Namevirtualhost[$nvh_addr_port]) and $ensure == 'present' {
-      apache::namevirtualhost { $nvh_addr_port: }
+      ::apache::namevirtualhost { $nvh_addr_port: }
     }
   }
 
   # Load mod_rewrite if needed and not yet loaded
   if $rewrites or $rewrite_cond {
     if ! defined(Apache::Mod['rewrite']) {
-      apache::mod { 'rewrite': }
+      ::apache::mod { 'rewrite': }
     }
   }
 
   # Load mod_alias if needed and not yet loaded
   if ($scriptalias or $scriptaliases != []) or ($redirect_source and $redirect_dest) {
     if ! defined(Class['apache::mod::alias']) {
-      include apache::mod::alias
+      include ::apache::mod::alias
     }
   }
 
   # Load mod_proxy if needed and not yet loaded
   if ($proxy_dest or $proxy_pass) {
     if ! defined(Class['apache::mod::proxy']) {
-      include apache::mod::proxy
+      include ::apache::mod::proxy
     }
     if ! defined(Class['apache::mod::proxy_http']) {
-      include apache::mod::proxy_http
+      include ::apache::mod::proxy_http
     }
   }
 
   # Load mod_passenger if needed and not yet loaded
   if $rack_base_uris {
     if ! defined(Class['apache::mod::passenger']) {
-      include apache::mod::passenger
+      include ::apache::mod::passenger
     }
   }
 
   # Load mod_fastci if needed and not yet loaded
   if $fastcgi_server and $fastcgi_socket {
     if ! defined(Class['apache::mod::fastcgi']) {
-      include apache::mod::fastcgi
+      include ::apache::mod::fastcgi
     }
   }
 
@@ -386,7 +398,7 @@ define apache::vhost(
   # Check if mod_headers is required to process $headers/$request_headers
   if $headers or $request_headers {
     if ! defined(Class['apache::mod::headers']) {
-      include apache::mod::headers
+      include ::apache::mod::headers
     }
   }
 
@@ -400,15 +412,26 @@ define apache::vhost(
     }
     $_directories = $directories
   } else {
-    $_directories = [ {
+    $_directory = {
       provider       => 'directory',
       path           => $docroot,
       options        => $options,
       allow_override => $override,
       directoryindex => $directoryindex,
-      order          => 'allow,deny',
-      allow          => 'from all',
-    } ]
+    }
+
+    if $apache_version == 2.4 {
+      $_directory_version = {
+        require => 'all granted',
+      }
+    } else {
+      $_directory_version = {
+        order => 'allow,deny',
+        allow => 'from all',
+      }
+    }
+
+    $_directories = [ merge($_directory, $_directory_version) ]
   }
 
   # Template uses:
@@ -486,15 +509,17 @@ define apache::vhost(
   #   - $suphp_engine
   #   - $suphp_configpath
   # wsgi fragment:
+  #   - $wsgi_application_group
   #   - $wsgi_daemon_process
+  #   - $wsgi_import_script
   #   - $wsgi_process_group
   #   - $wsgi_script_aliases
   file { "${priority_real}-${filename}.conf":
     ensure  => $ensure,
-    path    => "${apache::vhost_dir}/${priority_real}-${filename}.conf",
+    path    => "${::apache::vhost_dir}/${priority_real}-${filename}.conf",
     content => template('apache/vhost.conf.erb'),
     owner   => 'root',
-    group   => $apache::params::root_group,
+    group   => $::apache::params::root_group,
     mode    => '0644',
     require => [
       Package['httpd'],
@@ -504,7 +529,7 @@ define apache::vhost(
     notify  => Service['httpd'],
   }
   if $::osfamily == 'Debian' {
-    $vhost_enable_dir = $apache::vhost_enable_dir
+    $vhost_enable_dir = $::apache::vhost_enable_dir
     $vhost_symlink_ensure = $ensure ? {
       present => link,
       default => $ensure,
@@ -512,9 +537,9 @@ define apache::vhost(
     file{ "${priority_real}-${filename}.conf symlink":
       ensure  => $vhost_symlink_ensure,
       path    => "${vhost_enable_dir}/${priority_real}-${filename}.conf",
-      target  => "${apache::vhost_dir}/${priority_real}-${filename}.conf",
+      target  => "${::apache::vhost_dir}/${priority_real}-${filename}.conf",
       owner   => 'root',
-      group   => $apache::params::root_group,
+      group   => $::apache::params::root_group,
       mode    => '0644',
       require => File["${priority_real}-${filename}.conf"],
       notify  => Service['httpd'],

@@ -1,6 +1,6 @@
 require 'spec_helper_acceptance'
 
-describe 'mysql class' do
+describe 'mysql class', :unless => UNSUPPORTED_PLATFORMS.include?(fact('operatingsystem')) do
   case fact('osfamily')
   when 'RedHat'
     package_name     = 'mysql-server'
@@ -8,10 +8,18 @@ describe 'mysql class' do
     service_provider = 'undef'
     mycnf            = '/etc/my.cnf'
   when 'Suse'
-    package_name     = 'mysql-community-server'
-    service_name     = 'mysql'
-    service_provider = 'undef'
-    mycnf            = '/etc/my.cnf'
+    case fact('operatingsystem')
+    when 'OpenSuSE'
+      package_name     = 'mysql-community-server'
+      service_name     = 'mysql'
+      service_provider = 'undef'
+      mycnf            = '/etc/my.cnf'
+    when 'SLES'
+      package_name     = 'mysql'
+      service_name     = 'mysql'
+      service_provider = 'undef'
+      mycnf            = '/etc/my.cnf'
+    end
   when 'Debian'
     package_name     = 'mysql-server'
     service_name     = 'mysql'
@@ -191,12 +199,13 @@ describe 'mysql class' do
       pp = <<-EOS
         class { 'mysql::server':
           root_group => 'test',
+          config_file => '/tmp/mysql_group_test',
         }
       EOS
       apply_manifest(pp, :catch_failures => true)
     end
 
-    describe file('/etc/my.cnf') do
+    describe file('/tmp/mysql_group_test') do
       it { should be_grouped_into 'test' }
     end
   end

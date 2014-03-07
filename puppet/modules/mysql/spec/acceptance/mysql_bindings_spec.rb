@@ -12,8 +12,8 @@ when 'RedHat'
   ruby_package   = 'ruby-mysql'
 when 'Suse'
   java_package   = 'mysql-connector-java'
-  perl_package   = 'perl-DBD-MySQL'
-  php_package    = 'apache2-mod_php5'
+  perl_package   = 'perl-DBD-mysql'
+  php_package    = 'apache2-mod_php53'
   python_package = 'python-mysql'
   case operatingsystem
   when /OpenSuSE/
@@ -44,7 +44,7 @@ else
   end
 end
 
-describe 'mysql::bindings class' do
+describe 'mysql::bindings class', :unless => UNSUPPORTED_PLATFORMS.include?(fact('operatingsystem')) do
 
   describe 'running puppet code' do
     it 'should work with no errors' do
@@ -64,6 +64,7 @@ describe 'mysql::bindings class' do
         class { 'mysql::bindings':
           java_enable             => true,
           perl_enable             => true,
+          php_enable              => true,
           python_enable           => true,
           ruby_enable             => true,
           java_package_ensure     => present,
