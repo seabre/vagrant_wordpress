@@ -4,6 +4,9 @@ case fact('osfamily')
 when 'AIX'
   username  = 'root'
   groupname = 'system'
+when 'Darwin'
+  username  = 'root'
+  groupname = 'wheel'
 when 'windows'
   username  = 'Administrator'
   groupname = 'Administrators'
@@ -17,8 +20,8 @@ describe 'basic concat test', :unless => UNSUPPORTED_PLATFORMS.include?(fact('os
 
   shared_examples 'successfully_applied' do |pp|
     it 'applies the manifest twice with no stderr' do
-      expect(apply_manifest(pp, :catch_failures => true).stderr).to eq("")
-      expect(apply_manifest(pp, :catch_changes => true).stderr).to eq("")
+      apply_manifest(pp, :catch_failures => true)
+      apply_manifest(pp, :catch_changes => true)
     end
   end
 

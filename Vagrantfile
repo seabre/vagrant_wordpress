@@ -15,7 +15,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     "fqdn" => "local.wordpress_project", 
     "hostname" => "www",
 # # # Provide the name of the project here # # #
-    "project_name" => "NAME_YOUR_PROJECT" }
+    "project_name" => "PROJECT_NAME" }
    puppet.module_path = "puppet/modules"
    puppet.manifests_path = "puppet/manifests"
    puppet.manifest_file  = "site.pp"
