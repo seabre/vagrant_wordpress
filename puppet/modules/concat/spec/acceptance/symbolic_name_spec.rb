@@ -1,9 +1,8 @@
 require 'spec_helper_acceptance'
 
-describe 'symbolic name', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'symbolic name' do
   basedir = default.tmpdir('concat')
   pp = <<-EOS
-    include concat::setup
     concat { 'not_abs_path':
       path => '#{basedir}/file',
     }

@@ -1,19 +1,21 @@
 require 'spec_helper_acceptance'
 
-describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'replacement of' do
   basedir = default.tmpdir('concat')
   context 'file' do
     context 'should not succeed' do
       before(:all) do
-        shell("mkdir -p #{basedir}")
-        shell("echo 'file exists' > #{basedir}/file")
+        pp = <<-EOS
+          file { '#{basedir}':
+            ensure => directory,
+          }
+          file { '#{basedir}/file':
+            content => "file exists\n"
+          }
+        EOS
+        apply_manifest(pp)
       end
-      after(:all) do
-        shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-      end
-
       pp = <<-EOS
-        include concat::setup
         concat { '#{basedir}/file':
           replace => false,
         }
@@ -44,15 +46,17 @@ describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
 
     context 'should succeed' do
       before(:all) do
-        shell("mkdir -p #{basedir}")
-        shell("echo 'file exists' > #{basedir}/file")
+        pp = <<-EOS
+          file { '#{basedir}':
+            ensure => directory,
+          }
+          file { '#{basedir}/file':
+            content => "file exists\n"
+          }
+        EOS
+        apply_manifest(pp)
       end
-      after(:all) do
-        shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-      end
-
       pp = <<-EOS
-        include concat::setup
         concat { '#{basedir}/file':
           replace => true,
         }
@@ -82,21 +86,25 @@ describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
     end
   end # file
 
-  context 'symlink' do
+  context 'symlink', :unless => (fact("osfamily") == "windows") do
     context 'should not succeed' do
       # XXX the core puppet file type will replace a symlink with a plain file
       # when using ensure => present and source => ... but it will not when using
       # ensure => present and content => ...; this is somewhat confusing behavior
       before(:all) do
-        shell("mkdir -p #{basedir}")
-        shell("ln -s #{basedir}/dangling #{basedir}/file")
-      end
-      after(:all) do
-        shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
+        pp = <<-EOS
+          file { '#{basedir}':
+            ensure => directory,
+          }
+          file { '#{basedir}/file':
+            ensure => link,
+            target => '#{basedir}/dangling',
+          }
+        EOS
+        apply_manifest(pp)
       end
 
       pp = <<-EOS
-        include concat::setup
         concat { '#{basedir}/file':
           replace => false,
         }
@@ -118,7 +126,7 @@ describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
       end
 
       # XXX specinfra doesn't support be_linked_to on AIX
-      describe file("#{basedir}/file"), :unless => (fact("osfamily") == "AIX" or UNSUPPORTED_PLATFORMS.include?(fact('osfamily'))) do
+      describe file("#{basedir}/file"), :unless => (fact("osfamily") == "AIX") do
         it { should be_linked_to "#{basedir}/dangling" }
       end
 
@@ -134,15 +142,19 @@ describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
       # when using ensure => present and source => ... but it will not when using
       # ensure => present and content => ...; this is somewhat confusing behavior
       before(:all) do
-        shell("mkdir -p #{basedir}")
-        shell("ln -s #{basedir}/dangling #{basedir}/file")
-      end
-      after(:all) do
-        shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
+        pp = <<-EOS
+          file { '#{basedir}':
+            ensure => directory,
+          }
+          file { '#{basedir}/file':
+            ensure => link,
+            target => '#{basedir}/dangling',
+          }
+        EOS
+        apply_manifest(pp)
       end
 
       pp = <<-EOS
-        include concat::setup
         concat { '#{basedir}/file':
           replace => true,
         }
@@ -174,14 +186,17 @@ describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
   context 'directory' do
     context 'should not succeed' do
       before(:all) do
-        shell("mkdir -p #{basedir}/file")
+        pp = <<-EOS
+          file { '#{basedir}':
+            ensure => directory,
+          }
+          file { '#{basedir}/file':
+            ensure => directory,
+          }
+        EOS
+        apply_manifest(pp)
       end
-      after(:all) do
-        shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-      end
-
       pp = <<-EOS
-        include concat::setup
         concat { '#{basedir}/file': }
 
         concat::fragment { '1':
@@ -211,15 +226,7 @@ describe 'replacement of', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
     # changed, extended, or a new param introduced to control directory
     # replacement.
     context 'should succeed', :pending => 'not yet implemented' do
-      before(:all) do
-        shell("mkdir -p #{basedir}/file")
-      end
-      after(:all) do
-        shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-      end
-
       pp = <<-EOS
-        include concat::setup
         concat { '#{basedir}/file':
           force => true,
         }

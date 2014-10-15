@@ -1,10 +1,9 @@
 require 'spec_helper_acceptance'
 
-describe 'concat warn =>', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'concat warn =>' do
   basedir = default.tmpdir('concat')
   context 'true should enable default warning message' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/file':
         warn  => true,
       }
@@ -36,7 +35,6 @@ describe 'concat warn =>', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
   end
   context 'false should not enable default warning message' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/file':
         warn  => false,
       }
@@ -68,7 +66,6 @@ describe 'concat warn =>', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfam
   end
   context '# foo should overide default warning message' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/file':
         warn  => '# foo',
       }

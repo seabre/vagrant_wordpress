@@ -1,15 +1,10 @@
 require 'spec_helper_acceptance'
 
-describe 'concat order', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'concat order' do
   basedir = default.tmpdir('concat')
-  before(:all) do
-    shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-    shell("mkdir -p #{basedir}")
-  end
 
   context '=> alpha' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/foo':
         order => 'alpha'
       }
@@ -35,7 +30,7 @@ describe 'concat order', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamil
     describe file("#{basedir}/foo") do
       it { should be_file }
       #XXX Solaris 10 doesn't support multi-line grep
-      it("should contain string10\nstring1\nsring2", :unless => (fact('osfamily') == 'Solaris' or UNSUPPORTED_PLATFORMS.include?(fact('osfamily')))) {
+      it("should contain string10\nstring1\nsring2", :unless => (fact('osfamily') == 'Solaris')) {
         should contain "string10\nstring1\nsring2"
       }
     end
@@ -43,7 +38,6 @@ describe 'concat order', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamil
 
   context '=> numeric' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/foo':
         order => 'numeric'
       }
@@ -69,23 +63,18 @@ describe 'concat order', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamil
     describe file("#{basedir}/foo") do
       it { should be_file }
       #XXX Solaris 10 doesn't support multi-line grep
-      it("should contain string1\nstring2\nsring10", :unless => (fact('osfamily') == 'Solaris' or UNSUPPORTED_PLATFORMS.include?(fact('osfamily')))) {
+      it("should contain string1\nstring2\nsring10", :unless => (fact('osfamily') == 'Solaris')) {
         should contain "string1\nstring2\nsring10"
       }
     end
   end
 end # concat order
 
-describe 'concat::fragment order', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'concat::fragment order' do
   basedir = default.tmpdir('concat')
-  before(:all) do
-    shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-    shell("mkdir -p #{basedir}")
-  end
 
   context '=> reverse order' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/foo': }
       concat::fragment { '1':
         target  => '#{basedir}/foo',
@@ -112,7 +101,7 @@ describe 'concat::fragment order', :unless => UNSUPPORTED_PLATFORMS.include?(fac
     describe file("#{basedir}/foo") do
       it { should be_file }
       #XXX Solaris 10 doesn't support multi-line grep
-      it("should contain string3\nstring2\nsring1", :unless => (fact('osfamily') == 'Solaris' or UNSUPPORTED_PLATFORMS.include?(fact('osfamily')))) {
+      it("should contain string3\nstring2\nsring1", :unless => (fact('osfamily') == 'Solaris')) {
         should contain "string3\nstring2\nsring1"
       }
     end
@@ -120,7 +109,6 @@ describe 'concat::fragment order', :unless => UNSUPPORTED_PLATFORMS.include?(fac
 
   context '=> normal order' do
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/foo': }
       concat::fragment { '1':
         target  => '#{basedir}/foo',
@@ -147,7 +135,7 @@ describe 'concat::fragment order', :unless => UNSUPPORTED_PLATFORMS.include?(fac
     describe file("#{basedir}/foo") do
       it { should be_file }
       #XXX Solaris 10 doesn't support multi-line grep
-      it("should contain string1\nstring2\nsring3", :unless => (fact('osfamily') == 'Solaris' or UNSUPPORTED_PLATFORMS.include?(fact('osfamily')))) {
+      it("should contain string1\nstring2\nsring3", :unless => (fact('osfamily') == 'Solaris')) {
         should contain "string1\nstring2\nsring3"
       }
     end

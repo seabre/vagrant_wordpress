@@ -1,16 +1,20 @@
 require 'spec_helper_acceptance'
 
-describe 'concat backup parameter', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'concat backup parameter' do
   basedir = default.tmpdir('concat')
   context '=> puppet' do
-    before :all do
-      shell("rm -rf #{basedir}")
-      shell("mkdir -p #{basedir}")
-      shell("echo 'old contents' > #{basedir}/file")
+    before(:all) do
+      pp = <<-EOS
+        file { '#{basedir}':
+          ensure => directory,
+        }
+        file { '#{basedir}/file':
+          content => "old contents\n",
+        }
+      EOS
+      apply_manifest(pp)
     end
-
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/file':
         backup => 'puppet',
       }
@@ -34,14 +38,18 @@ describe 'concat backup parameter', :unless => UNSUPPORTED_PLATFORMS.include?(fa
   end
 
   context '=> .backup' do
-    before :all do
-      shell("rm -rf #{basedir}")
-      shell("mkdir -p #{basedir}")
-      shell("echo 'old contents' > #{basedir}/file")
+    before(:all) do
+      pp = <<-EOS
+        file { '#{basedir}':
+          ensure => directory,
+        }
+        file { '#{basedir}/file':
+          content => "old contents\n",
+        }
+      EOS
+      apply_manifest(pp)
     end
-
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/file':
         backup => '.backup',
       }
@@ -71,14 +79,18 @@ describe 'concat backup parameter', :unless => UNSUPPORTED_PLATFORMS.include?(fa
   # XXX The backup parameter uses validate_string() and thus can't be the
   # boolean false value, but the string 'false' has the same effect in Puppet 3
   context "=> 'false'" do
-    before :all do
-      shell("rm -rf #{basedir}")
-      shell("mkdir -p #{basedir}")
-      shell("echo 'old contents' > #{basedir}/file")
+    before(:all) do
+      pp = <<-EOS
+        file { '#{basedir}':
+          ensure => directory,
+        }
+        file { '#{basedir}/file':
+          content => "old contents\n",
+        }
+      EOS
+      apply_manifest(pp)
     end
-
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/file':
         backup => '.backup',
       }

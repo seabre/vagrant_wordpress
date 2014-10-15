@@ -15,21 +15,22 @@ else
   groupname = 'root'
 end
 
-describe 'concat::fragment source', :unless => UNSUPPORTED_PLATFORMS.include?(fact('osfamily')) do
+describe 'concat::fragment source' do
   basedir = default.tmpdir('concat')
   context 'should read file fragments from local system' do
-    before(:all) do
-      shell("/bin/echo 'file1 contents' > #{basedir}/file1")
-      shell("/bin/echo 'file2 contents' > #{basedir}/file2")
-    end
-
     pp = <<-EOS
-      include concat::setup
+      file { '#{basedir}/file1':
+        content => "file1 contents\n"
+      }
+      file { '#{basedir}/file2':
+        content => "file2 contents\n"
+      }
       concat { '#{basedir}/foo': }
 
       concat::fragment { '1':
         target  => '#{basedir}/foo',
         source  => '#{basedir}/file1',
+        require => File['#{basedir}/file1'],
       }
       concat::fragment { '2':
         target  => '#{basedir}/foo',
@@ -38,6 +39,7 @@ describe 'concat::fragment source', :unless => UNSUPPORTED_PLATFORMS.include?(fa
       concat::fragment { '3':
         target  => '#{basedir}/foo',
         source  => '#{basedir}/file2',
+        require => File['#{basedir}/file2'],
       }
     EOS
 
@@ -55,15 +57,13 @@ describe 'concat::fragment source', :unless => UNSUPPORTED_PLATFORMS.include?(fa
   end # should read file fragments from local system
 
   context 'should create files containing first match only.' do
-    before(:all) do
-      shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-      shell("mkdir -p #{basedir}")
-      shell("echo 'file1 contents' > #{basedir}/file1")
-      shell("echo 'file2 contents' > #{basedir}/file2")
-    end
-
     pp = <<-EOS
-      include concat::setup
+      file { '#{basedir}/file1':
+        content => "file1 contents\n"
+      }
+      file { '#{basedir}/file2':
+        content => "file2 contents\n"
+      }
       concat { '#{basedir}/result_file1':
         owner   => '#{username}',
         group   => '#{groupname}',
@@ -82,17 +82,20 @@ describe 'concat::fragment source', :unless => UNSUPPORTED_PLATFORMS.include?(fa
 
       concat::fragment { '1':
         target  => '#{basedir}/result_file1',
-        source => [ '#{basedir}/file1', '#{basedir}/file2' ],
+        source  => [ '#{basedir}/file1', '#{basedir}/file2' ],
+        require => [ File['#{basedir}/file1'], File['#{basedir}/file2'] ],
         order   => '01',
       }
       concat::fragment { '2':
         target  => '#{basedir}/result_file2',
-        source => [ '#{basedir}/file2', '#{basedir}/file1' ],
+        source  => [ '#{basedir}/file2', '#{basedir}/file1' ],
+        require => [ File['#{basedir}/file1'], File['#{basedir}/file2'] ],
         order   => '01',
       }
       concat::fragment { '3':
         target  => '#{basedir}/result_file3',
-        source => [ '#{basedir}/file1', '#{basedir}/file2' ],
+        source  => [ '#{basedir}/file1', '#{basedir}/file2' ],
+        require => [ File['#{basedir}/file1'], File['#{basedir}/file2'] ],
         order   => '01',
       }
     EOS
@@ -119,14 +122,7 @@ describe 'concat::fragment source', :unless => UNSUPPORTED_PLATFORMS.include?(fa
   end
 
   context 'should fail if no match on source.' do
-    before(:all) do
-      shell("rm -rf #{basedir} #{default.puppet['vardir']}/concat")
-      shell("mkdir -p #{basedir}")
-      shell("rm -rf #{basedir}/fail_no_source #{basedir}/nofilehere #{basedir}/nothereeither")
-    end
-
     pp = <<-EOS
-      include concat::setup
       concat { '#{basedir}/fail_no_source':
         owner   => '#{username}',
         group   => '#{groupname}',
