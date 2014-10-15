@@ -3,9 +3,7 @@ Puppet::Type.newtype(:mysql_grant) do
   @doc = "Manage a MySQL user's rights."
   ensurable
 
-  autorequire(:file) do
-    '/root/.my.cnf'
-  end
+  autorequire(:file) { '/root/.my.cnf' }
 
   def initialize(*args)
     super
@@ -19,7 +17,7 @@ Puppet::Type.newtype(:mysql_grant) do
     # Sort the privileges array in order to ensure the comparision in the provider
     # self.instances method match.  Otherwise this causes it to keep resetting the
     # privileges.
-    self[:privileges] = Array(self[:privileges]).sort!
+    self[:privileges] = Array(self[:privileges]).map(&:upcase).uniq.reject{|k| k == 'GRANT' or k == 'GRANT OPTION'}.sort!
   end
 
   validate do
@@ -38,6 +36,10 @@ Puppet::Type.newtype(:mysql_grant) do
 
   newproperty(:privileges, :array_matching => :all) do
     desc 'Privileges for user'
+
+    munge do |value|
+      value.upcase
+    end
   end
 
   newproperty(:table) do
@@ -47,7 +49,7 @@ Puppet::Type.newtype(:mysql_grant) do
       value.delete("`")
     end
 
-    newvalues(/.*\..*/)
+    newvalues(/.*\..*/,/@/)
   end
 
   newproperty(:user) do

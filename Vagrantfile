@@ -3,7 +3,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "precise32"
   config.vm.box_url = "http://files.vagrantup.com/precise32.box"
-  config.vm.network :forwarded_port, guest: 80, host: 3000
+  config.vm.network "forwarded_port", guest: 80, host: 3000
   config.vm.synced_folder ".", "/wordpress_project", owner: "www-data", group: "www-data"
 
   config.vm.provider "virtualbox" do |vb|
@@ -11,13 +11,13 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   end
 
   config.vm.provision "puppet" do |puppet|
-   puppet.facter = { 
+   puppet.facter = {
     "fqdn" => "local.wordpress_project", 
     "hostname" => "www",
 # # # Provide the name of the project here # # #
-    "project_name" => "NAME_YOUR_PROJECT"}
-   puppet.manifests_path = 'puppet/manifests'
-   puppet.manifest_file  = 'site.pp'
-   puppet.module_path = 'puppet/modules'
+    "project_name" => "PROJECT_NAME" }
+   puppet.module_path = "puppet/modules"
+   puppet.manifests_path = "puppet/manifests"
+   puppet.manifest_file  = "site.pp"
   end
 end
