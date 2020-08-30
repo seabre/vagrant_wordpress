@@ -9,3 +9,5 @@ Stupid simple Vagrant setup for WordPress projects.
 3) Run `vagrant up` and give it a couple minutes to set everything up.
 
 You'll be able to access your project from http://localhost:3000.
+
+8/30/2020: This is super old and no longer maintained. It was my first foray into Github, Vagrant, and WordPress development. Leaving it here for posterity.
